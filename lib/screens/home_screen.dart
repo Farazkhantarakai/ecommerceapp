@@ -4,7 +4,6 @@ import 'package:ecommerce_app/widgets/backpack.dart';
 import 'package:ecommerce_app/widgets/listitem.dart';
 import 'package:ecommerce_app/widgets/sneakers.dart';
 import 'package:ecommerce_app/widgets/watch.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +18,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String _selectedItem = "Sort By";
   var scaffold = GlobalKey<ScaffoldState>(); //keys are used to distinct widgets
+  bool isLoading = false;
+  @override
+  void initState() {
+    setState(() {
+      isLoading = true;
+    });
+    Future.delayed(Duration.zero).then((_) {
+      Provider.of<Products>(context, listen: false).fetchAndSet().then((_) {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,87 +83,93 @@ class _HomeScreenState extends State<HomeScreen> {
             key: scaffold,
             backgroundColor: const Color.fromARGB(255, 235, 234, 234),
             drawer: const AppDrawer(),
-            body: Padding(
-                padding: const EdgeInsets.only(left: 13, right: 13),
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 2,
+            body: isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.black,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(left: 13, right: 13),
+                    child: Column(
                       children: [
-                        const Text(
-                          'Our Product',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
+                        const SizedBox(
+                          height: 2,
                         ),
-                        DropdownButton(
-                            hint: const Text(
-                              'Sort By',
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Our Product',
                               style: TextStyle(
-                                  fontSize: 15,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.grey),
+                                  fontSize: 20),
                             ),
-                            value: _selectedItem,
-                            // dropdownColor: Colors.grey,
-                            items:
-                                ['Sort By', 'title', 'price'].map((String e) {
-                              return DropdownMenuItem<String>(
-                                  value: e,
-                                  child: Text(
-                                    e.toString(),
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ));
-                            }).toList(),
-                            onChanged: (String? value) {
-                              setState(() {
-                                _selectedItem = value!;
-                                prod.setSortingItem(_selectedItem);
-                                if (kDebugMode) {
-                                  print(_selectedItem);
-                                }
-                              });
-                            }),
+                            DropdownButton(
+                                hint: const Text(
+                                  'Sort By',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey),
+                                ),
+                                value: _selectedItem,
+                                // dropdownColor: Colors.grey,
+                                items: ['Sort By', 'title', 'price']
+                                    .map((String e) {
+                                  return DropdownMenuItem<String>(
+                                      value: e,
+                                      child: Text(
+                                        e.toString(),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ));
+                                }).toList(),
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    _selectedItem = value!;
+                                    // prod.setSortingItem(_selectedItem);
+                                    // if (kDebugMode) {
+                                    //   print(_selectedItem);
+                                    // }
+                                  });
+                                }),
+                          ],
+                        ),
+                        //this row will have items of sneaker watch and backpack
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    prod.selectProduct('sneaker');
+                                  },
+                                  child: const Sneakers()),
+                              InkWell(
+                                  onTap: () {
+                                    prod.selectProduct('watch');
+                                  },
+                                  child: const Watch()),
+                              InkWell(
+                                  onTap: () {
+                                    prod.selectProduct('backpack');
+                                  },
+                                  child: const BackPack()),
+                            ]),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                            constraints: BoxConstraints.expand(
+                                width: double.infinity,
+                                height: (mdq.size.height -
+                                        appbar.preferredSize.height -
+                                        mdq.padding.top) *
+                                    0.7),
+                            child: const ListItem())
                       ],
-                    ),
-                    //this row will have items of sneaker watch and backpack
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                prod.selectProduct('sneaker');
-                              },
-                              child: const Sneakers()),
-                          InkWell(
-                              onTap: () {
-                                prod.selectProduct('watch');
-                              },
-                              child: const Watch()),
-                          InkWell(
-                              onTap: () {
-                                prod.selectProduct('backpack');
-                              },
-                              child: const BackPack()),
-                        ]),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                        constraints: BoxConstraints.expand(
-                            width: double.infinity,
-                            height: (mdq.size.height -
-                                    appbar.preferredSize.height -
-                                    mdq.padding.top) *
-                                0.7),
-                        child: const ListItem())
-                  ],
-                )),
+                    )),
             appBar: appbar));
   }
 }

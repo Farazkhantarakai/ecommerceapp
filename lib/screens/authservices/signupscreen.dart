@@ -4,7 +4,6 @@ import 'package:ecommerce_app/screens/authservices/loginscreen.dart';
 import 'package:ecommerce_app/utils/utils.dart';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -172,17 +171,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 onTap: () async {
                                   if (_formKey.currentState!.validate()) {
                                     _formKey.currentState!.save();
-                                    // setState(() {
-                                    //   isloading = true;
-                                    // });
-
-                                    await auth.signUpUser(_emailController.text,
-                                        _passwordController.text);
-                                    // if (result == 'success') {
-                                    //   Fluttertoast.showToast(
-                                    //       msg: 'Account Created Succefully');
-                                    // }
-
+                                    setState(() {
+                                      isloading = true;
+                                    });
+                                    try {
+                                      await auth
+                                          .signUpUser(_emailController.text,
+                                              _passwordController.text)
+                                          .then(() {
+                                        setState(() {
+                                          isloading = false;
+                                        });
+                                      });
+                                    } on HttpException catch (err) {
+                                      if (err.message.contains('EMAIL_EXIST')) {
+                                        showToast(
+                                            context, 'email already exist');
+                                      } else {
+                                        showToast(
+                                            context, '${err.message.toString}');
+                                      }
+                                    } catch (err) {
+                                      throw err;
+                                    }
                                   }
                                 },
                                 child: Container(

@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/dummy_data.dart';
+import 'package:ecommerce_app/models/Product.dart';
 import 'package:ecommerce_app/models/item.dart';
 import 'package:ecommerce_app/widgets/carousolcontainer.dart';
 import 'package:ecommerce_app/widgets/productdetails.dart';
@@ -18,7 +19,7 @@ class _DetailScreenState extends State<DetailScreen> {
   late AppBar appBar;
   @override
   Widget build(BuildContext context) {
-    var tData = ModalRoute.of(context)!.settings.arguments as Item;
+    var tData = ModalRoute.of(context)!.settings.arguments as ProductModel;
     var cData = Provider.of<Products>(context, listen: false).getProducts;
     //singlewhere will give you that single item
     var tak = cData.singleWhere((element) => element.id == tData.id);
@@ -56,7 +57,8 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  detailScreenBar(Item tak) {
+  //  Item tak
+  detailScreenBar(ProductModel tak) {
     appBar = AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
@@ -82,18 +84,20 @@ class _DetailScreenState extends State<DetailScreen> {
           IconButton(
               onPressed: () {
                 setState(() {
-                  tak.doFavorite();
+                  // tak.doFavorite();
                 });
               },
-              icon: tak.isFavorite
-                  ? const Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                    )
-                  : const Icon(
-                      Icons.favorite,
-                      color: Colors.grey,
-                    ))
+              icon:
+                  // tak.isFavourite!
+                  //     ? const Icon(
+                  //         Icons.favorite,
+                  //         color: Colors.red,
+                  //       )
+                  //     :
+                  const Icon(
+                Icons.favorite,
+                color: Colors.grey,
+              ))
         ],
         centerTitle: true,
         title: const Text.rich(TextSpan(

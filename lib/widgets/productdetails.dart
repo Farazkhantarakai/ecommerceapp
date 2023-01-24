@@ -1,7 +1,6 @@
+import 'package:ecommerce_app/models/Product.dart';
 import 'package:ecommerce_app/models/cartmodel.dart';
-import 'package:ecommerce_app/models/item.dart';
 import 'package:ecommerce_app/providers/cartitem.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class ProductDetail extends StatefulWidget {
   const ProductDetail({super.key, required this.tak});
-  final Item tak;
+  final ProductModel tak;
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
@@ -53,25 +52,30 @@ class _ProductDetailState extends State<ProductDetail> {
             ));
   }
 
+  Color convertColor(String colorItem) {
+    Color color = Color(int.parse('ff${colorItem.substring(1)}', radix: 16));
+    if (kDebugMode) {
+      print('color $color');
+    }
+    return color;
+  }
+
   //List generate method will create exactly the same item of the length
-  generateColor(length, List<Color>? colorItem) {
+  generateColor(length, List<dynamic>? colorItem) {
     return List.generate(
         length,
         (index) => GestureDetector(
               onTap: () {
                 setState(() {
                   colorIndex = index;
-                  selectColor = colorItem[index];
-                  if (kDebugMode) {
-                    print(selectColor);
-                  }
+                  selectColor = convertColor(colorItem[index]);
                 });
               },
               child: Container(
                 margin: const EdgeInsets.only(left: 10),
                 constraints: const BoxConstraints.expand(width: 34, height: 34),
                 decoration: BoxDecoration(
-                  color: colorItem![index],
+                  color: convertColor(colorItem![index]),
                   shape: BoxShape.circle,
                 ),
                 child: colorIndex == index
@@ -207,13 +211,15 @@ class _ProductDetailState extends State<ProductDetail> {
                     const Spacer(),
                     InkWell(
                       onTap: () async {
+                        Color initialColor =
+                            convertColor(widget.tak.colors![0]);
                         CartModel cm = CartModel(
                             widget.tak.id,
                             widget.tak.title,
-                            widget.tak.images![0].toString(),
-                            widget.tak.price,
+                            widget.tak.imageUrl![0].toString(),
+                            double.parse(widget.tak.price.toString()),
                             size ?? widget.tak.size![0],
-                            selectColor ?? widget.tak.colors![0],
+                            selectColor ?? initialColor,
                             widget.tak.off == '0'
                                 ? 0
                                 : int.parse(widget.tak.off.toString()),

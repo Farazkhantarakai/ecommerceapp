@@ -1,17 +1,19 @@
+import 'package:ecommerce_app/models/Product.dart';
 import 'package:ecommerce_app/models/item.dart';
 import 'package:ecommerce_app/screens/detailscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SingleGridItem extends StatelessWidget {
-  const SingleGridItem({super.key, required this.ctx
+  const SingleGridItem(
+      {super.key, required this.ctx, required ProductModel singleItem
       // required this.singleItem
       });
   final BoxConstraints ctx;
   // final Item singleItem;
   @override
   Widget build(BuildContext context) {
-    var ite = Provider.of<Item>(context, listen: true);
+    var ite = Provider.of<ProductModel>(context, listen: true);
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, DetailScreen.routName, arguments: ite);
@@ -56,20 +58,21 @@ class SingleGridItem extends StatelessWidget {
                     const Spacer(),
                     GestureDetector(
                       onTap: () {
-                        ite.doFavorite();
+                        // ite.doFavorite();
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(right: 8.0),
-                        child: ite.isFavorite
-                            ? const Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                                // size: 15,
-                              )
-                            : const Icon(
-                                Icons.favorite,
-                                color: Colors.grey,
-                              ),
+                        child:
+                            // ite.isFavourite? const Icon(
+                            //         Icons.favorite,
+                            //         color: Colors.red,
+                            //         // size: 15,
+                            //       )
+                            //     :
+                            const Icon(
+                          Icons.favorite,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                   ],
@@ -88,7 +91,7 @@ class SingleGridItem extends StatelessWidget {
                           width: double.infinity,
                           height: ctx.maxHeight * 0.2,
                           child: Image.network(
-                            ite.images![0],
+                            ite.imageUrl![0],
                             height: 50,
                           ),
                         ),

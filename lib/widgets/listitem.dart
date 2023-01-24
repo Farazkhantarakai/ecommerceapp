@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/dummy_data.dart';
+import 'package:ecommerce_app/models/Product.dart';
 import 'package:ecommerce_app/models/item.dart';
 import 'package:ecommerce_app/widgets/singlegriditem.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,8 @@ class ListItem extends StatefulWidget {
 class _ListItemState extends State<ListItem> {
   @override
   Widget build(BuildContext context) {
-    List<Item> pro = Provider.of<Products>(context, listen: true).getProducts;
+    List<ProductModel> pro =
+        Provider.of<Products>(context, listen: true).getProducts;
 
     return LayoutBuilder(builder: (context, BoxConstraints ctx) {
       return GridView.builder(
@@ -25,10 +27,10 @@ class _ListItemState extends State<ListItem> {
               mainAxisSpacing: 10,
               crossAxisSpacing: 10),
           itemBuilder: (context, index) {
-            return ChangeNotifierProvider<Item>.value(
+            return ChangeNotifierProvider<ProductModel>.value(
               value: pro[index],
               child: SingleGridItem(
-                // singleItem: data[index],
+                singleItem: pro[index],
                 ctx: ctx,
               ),
             );

@@ -2,6 +2,7 @@ import 'package:curved_nav_bar/curved_bar/curved_action_bar.dart';
 import 'package:curved_nav_bar/fab_bar/fab_bottom_app_bar_item.dart';
 import 'package:curved_nav_bar/flutter_curved_bottom_nav_bar.dart';
 import 'package:ecommerce_app/dummy_data.dart';
+import 'package:ecommerce_app/models/Product.dart';
 import 'package:ecommerce_app/providers/auth.dart';
 import 'package:ecommerce_app/providers/cartitem.dart';
 import 'package:ecommerce_app/screens/authservices/loginscreen.dart';
@@ -39,7 +40,8 @@ class _MyAppState extends State<MyApp> {
           ),
           ChangeNotifierProvider.value(
             value: CartItem(),
-          )
+          ),
+          ChangeNotifierProvider.value(value: ProductModel())
         ],
         child: Consumer<Auth>(
           builder: (context, auth, child) {
@@ -200,9 +202,10 @@ class _MyHomeAppState extends State<MyHomeApp> {
               ),
               text: ''),
         ],
-        bodyItems: const [
+        bodyItems: [
           HomeScreen(),
-          FavouriteScreen(),
+          // FavouriteScreen(),
+          Container(),
           ChatScreen(),
           ProfileScreen()
         ],

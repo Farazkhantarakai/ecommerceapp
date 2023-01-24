@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:ecommerce_app/models/item.dart';
+import 'package:ecommerce_app/models/Product.dart';
 import 'package:flutter/material.dart';
 
 class CarousolContainer extends StatefulWidget {
   const CarousolContainer({super.key, required this.tak});
-  final Item tak;
+  final ProductModel tak;
 
   @override
   State<CarousolContainer> createState() => _CarousolContainerState();
@@ -70,7 +70,7 @@ class _CarousolContainerState extends State<CarousolContainer> {
                 constraints: BoxConstraints.expand(
                     width: double.infinity, height: ctx.maxHeight * 0.7),
                 child: CarouselSlider(
-                    items: widget.tak.images!
+                    items: widget.tak.imageUrl!
                         .map((e) => Image.network(
                               e.toString(),
                               fit: BoxFit.contain,
@@ -90,7 +90,7 @@ class _CarousolContainerState extends State<CarousolContainer> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: indicator(widget.tak.images!.length, cindex),
+                children: indicator(widget.tak.imageUrl!.length, cindex),
               )
             ],
           ));

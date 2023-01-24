@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void showSnackBar(BuildContext context, content) {
   SnackBar snackBar = SnackBar(
@@ -10,6 +11,10 @@ void showSnackBar(BuildContext context, content) {
     backgroundColor: Colors.white,
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
+
+void showToast(BuildContext context, title) {
+  Fluttertoast.showToast(msg: title.toString(), backgroundColor: Colors.black);
 }
 
 void dialogue(BuildContext context, message) {
