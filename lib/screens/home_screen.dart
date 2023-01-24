@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/dummy_data.dart';
+import 'package:ecommerce_app/providers/dummy_data.dart';
 import 'package:ecommerce_app/widgets/appdrawer.dart';
 import 'package:ecommerce_app/widgets/backpack.dart';
 import 'package:ecommerce_app/widgets/listitem.dart';
@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _selectedItem = "Sort By";
   var scaffold = GlobalKey<ScaffoldState>(); //keys are used to distinct widgets
   bool isLoading = false;
+  bool onceFetched = false;
   @override
   void initState() {
     setState(() {
@@ -31,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       });
     });
+
     super.initState();
   }
 
@@ -129,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onChanged: (String? value) {
                                   setState(() {
                                     _selectedItem = value!;
-                                    // prod.setSortingItem(_selectedItem);
+                                    prod.setSortingItem(_selectedItem);
                                     // if (kDebugMode) {
                                     //   print(_selectedItem);
                                     // }

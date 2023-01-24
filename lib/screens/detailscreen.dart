@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/dummy_data.dart';
+import 'package:ecommerce_app/providers/dummy_data.dart';
 import 'package:ecommerce_app/models/Product.dart';
 import 'package:ecommerce_app/models/item.dart';
 import 'package:ecommerce_app/widgets/carousolcontainer.dart';

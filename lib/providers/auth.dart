@@ -1,17 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:ecommerce_app/models/httpexception.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth extends ChangeNotifier {
   String _tokenId = '';
   DateTime? _expireDate;
   String _userId = '';
+  Timer? _timer;
 
   bool get isAuth {
-    // if (kDebugMode) {
-    //   print('token $token');
-    // }
     return token != '';
   }
 
@@ -19,9 +19,6 @@ class Auth extends ChangeNotifier {
     if (_expireDate != null &&
         _tokenId.isNotEmpty &&
         _expireDate!.isAfter(DateTime.now())) {
-      // if (kDebugMode) {
-      //   print('token receieved $_tokenId');
-      // }
       return _tokenId;
     }
     return '';
@@ -48,7 +45,15 @@ class Auth extends ChangeNotifier {
         _expireDate = DateTime.now()
             .add(Duration(seconds: int.parse(result['expiresIn'])));
         _userId = result['localId'];
+        autoLogOut();
         notifyListeners();
+        SharedPreferences spf = await SharedPreferences.getInstance();
+        final user = jsonEncode({
+          'token': _tokenId,
+          'expiryDate': _expireDate!.toIso8601String(),
+          'userId': _userId
+        });
+        spf.setString('userData', user);
       }
     } catch (err) {
       throw err;
@@ -61,5 +66,48 @@ class Auth extends ChangeNotifier {
 
   logInUser(String email, String password) {
     return authenticate(email, password, 'signInWithPassword');
+  }
+
+  Future<bool> tryAutoLogIn() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+
+    final extractedData = json.decode(prefs.getString('userData').toString())
+        as Map<String, dynamic>;
+    final expiryDate = DateTime.parse(extractedData['expiryDate']);
+    if (expiryDate.isBefore((DateTime.now()))) {
+      return false;
+    }
+    _tokenId = extractedData['tokenId'];
+    _userId = extractedData['userId'];
+    _expireDate = expiryDate;
+    notifyListeners();
+    autoLogOut();
+    return true;
+  }
+
+  logOut() {
+    _tokenId = '';
+    _expireDate = null;
+    _userId = '';
+    if (_timer != null) {
+      _timer!.cancel();
+      _timer = null;
+    }
+    notifyListeners();
+  }
+
+  autoLogOut() {
+    //if timer is not null then cancel it
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+    //this will give the remaining time when the time will expire
+    final timeToExpire = _expireDate!.difference(DateTime.now()).inSeconds;
+    //this is taking two argument
+    _timer = Timer(Duration(seconds: timeToExpire), logOut);
   }
 }
