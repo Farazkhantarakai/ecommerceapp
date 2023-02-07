@@ -4,6 +4,7 @@ import 'package:ecommerce_app/widgets/backpack.dart';
 import 'package:ecommerce_app/widgets/listitem.dart';
 import 'package:ecommerce_app/widgets/sneakers.dart';
 import 'package:ecommerce_app/widgets/watch.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var scaffold = GlobalKey<ScaffoldState>(); //keys are used to distinct widgets
   bool isLoading = false;
   bool onceFetched = false;
+
   @override
   void initState() {
     setState(() {

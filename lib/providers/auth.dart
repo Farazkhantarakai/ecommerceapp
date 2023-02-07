@@ -48,7 +48,7 @@ class Auth extends ChangeNotifier {
         autoLogOut();
         notifyListeners();
         SharedPreferences spf = await SharedPreferences.getInstance();
-        final user = jsonEncode({
+        final user = json.encode({
           'token': _tokenId,
           'expiryDate': _expireDate!.toIso8601String(),
           'userId': _userId
@@ -56,7 +56,7 @@ class Auth extends ChangeNotifier {
         spf.setString('userData', user);
       }
     } catch (err) {
-      throw err;
+      rethrow;
     }
   }
 
@@ -68,20 +68,20 @@ class Auth extends ChangeNotifier {
     return authenticate(email, password, 'signInWithPassword');
   }
 
-  Future<bool> tryAutoLogIn() async {
+  Future<bool>? tryAutoLogIn() async {
     final prefs = await SharedPreferences.getInstance();
 
     if (!prefs.containsKey('userData')) {
       return false;
     }
 
-    final extractedData = json.decode(prefs.getString('userData').toString())
-        as Map<String, dynamic>;
+    final extractedData =
+        json.decode(prefs.getString('userData')!) as Map<String, dynamic>;
     final expiryDate = DateTime.parse(extractedData['expiryDate']);
     if (expiryDate.isBefore((DateTime.now()))) {
       return false;
     }
-    _tokenId = extractedData['tokenId'];
+    _tokenId = extractedData['token'];
     _userId = extractedData['userId'];
     _expireDate = expiryDate;
     notifyListeners();

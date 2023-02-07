@@ -10,12 +10,12 @@ import 'package:ecommerce_app/screens/authservices/signupscreen.dart';
 import 'package:ecommerce_app/screens/cart.dart';
 import 'package:ecommerce_app/screens/chatscreen.dart';
 import 'package:ecommerce_app/screens/detailscreen.dart';
-import 'package:ecommerce_app/screens/favouritescreen.dart';
 import 'package:ecommerce_app/screens/getstaretedScreen.dart';
 import 'package:ecommerce_app/screens/home_screen.dart';
 import 'package:ecommerce_app/screens/profile_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 
 void main() {
@@ -47,16 +47,23 @@ class _MyAppState extends State<MyApp> {
           builder: (context, auth, child) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                  appBarTheme: const AppBarTheme(
+                iconTheme: IconThemeData(color: Colors.white),
+                // systemOverlayStyle: SystemUiOverlayStyle()
+              )),
               home: auth.isAuth
                   ? const MyHomeApp()
                   : FutureBuilder(
                       future: auth.tryAutoLogIn(),
-                      builder: (context, snapshot) =>
-                          snapshot.connectionState == ConnectionState.waiting
-                              ? const Center(
-                                  child: CircularProgressIndicator(),
-                                )
-                              : const LogInScreen()),
+                      builder: (context, snapshot) {
+                        return snapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : const LogInScreen();
+                      }),
               routes: {
                 HomeScreen.routName: (context) => const HomeScreen(),
                 GetStartedScreen.routName: (context) =>
@@ -212,11 +219,11 @@ class _MyHomeAppState extends State<MyHomeApp> {
               text: ''),
         ],
         bodyItems: [
-          HomeScreen(),
+          const HomeScreen(),
           // FavouriteScreen(),
           Container(),
-          ChatScreen(),
-          ProfileScreen()
+          const ChatScreen(),
+          const ProfileScreen()
         ],
         actionBarView: Cart(
           key: UniqueKey(),
