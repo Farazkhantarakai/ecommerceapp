@@ -20,19 +20,34 @@ class _HomeScreenState extends State<HomeScreen> {
   String _selectedItem = "Sort By";
   var scaffold = GlobalKey<ScaffoldState>(); //keys are used to distinct widgets
   bool isLoading = false;
-  bool onceFetched = false;
+  bool isFirst = false;
+  bool _isDataFetched = false;
+
+  Future callOnce() {
+    return Provider.of<Products>(context, listen: false)
+        .fetchAndSet()
+        .then((_) {
+      setState(() {
+        isLoading = false;
+        _isDataFetched = true;
+        if (kDebugMode) {
+          print(_isDataFetched);
+        }
+      });
+    });
+  }
 
   @override
   void initState() {
+    if (_isDataFetched) {
+      return;
+    }
+
     setState(() {
       isLoading = true;
     });
     Future.delayed(Duration.zero).then((_) {
-      Provider.of<Products>(context, listen: false).fetchAndSet().then((_) {
-        setState(() {
-          isLoading = false;
-        });
-      });
+      callOnce();
     });
 
     super.initState();

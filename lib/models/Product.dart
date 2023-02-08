@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 class ProductModel extends ChangeNotifier {
   String? category;
@@ -29,14 +32,38 @@ class ProductModel extends ChangeNotifier {
   ProductModel.fromJson(Map<String, dynamic> data) {
     category = data['category'];
     id = data['id'];
-    colors = data['colors'] as List<dynamic>;
+    colors = data['colors'];
     description = data['description'];
-    imageUrl = data['image_url'] as List<dynamic>;
+    imageUrl = data['image_url'];
     isFavourite = data['isFavourite'];
     off = data['off'];
     price = data['price'];
     rating = data['rating'];
-    size = data['size'] as List<dynamic>;
+    size = data['size'];
     title = data['title'];
+  }
+
+  saveStatus(newValue) {
+    isFavourite = newValue;
+    notifyListeners();
+  }
+
+  doFavourite() async {
+    // this is optimistic way first
+    final oldStatus = isFavourite;
+    isFavourite = !isFavourite!;
+    String url =
+        'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/Product/$id.json';
+    try {
+      var response = await http.patch(Uri.parse(url),
+          body: jsonEncode({'isFavourite': isFavourite}));
+      if (response.statusCode >= 400) {
+        saveStatus(oldStatus);
+        notifyListeners();
+      }
+    } catch (err) {
+      saveStatus(oldStatus);
+      notifyListeners();
+    }
   }
 }

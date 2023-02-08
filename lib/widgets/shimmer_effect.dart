@@ -1,14 +1,14 @@
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 
-class ShimmerEffect extends StatelessWidget {
-  const ShimmerEffect({super.key});
+class DoShimming extends StatelessWidget {
+  const DoShimming({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-        baseColor: Colors.grey.shade300,
-        highlightColor: Colors.grey.shade100,
+        baseColor: const Color.fromARGB(255, 231, 101, 101),
+        highlightColor: const Color.fromARGB(255, 179, 22, 22),
         child: ListView.builder(itemBuilder: (context, index) {
           return const ListTile(
             title: Text(''),

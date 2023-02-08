@@ -10,6 +10,7 @@ import 'package:ecommerce_app/screens/authservices/signupscreen.dart';
 import 'package:ecommerce_app/screens/cart.dart';
 import 'package:ecommerce_app/screens/chatscreen.dart';
 import 'package:ecommerce_app/screens/detailscreen.dart';
+import 'package:ecommerce_app/screens/favouritescreen.dart';
 import 'package:ecommerce_app/screens/getstaretedScreen.dart';
 import 'package:ecommerce_app/screens/home_screen.dart';
 import 'package:ecommerce_app/screens/profile_screen.dart';
@@ -218,12 +219,11 @@ class _MyHomeAppState extends State<MyHomeApp> {
               ),
               text: ''),
         ],
-        bodyItems: [
-          const HomeScreen(),
-          // FavouriteScreen(),
-          Container(),
-          const ChatScreen(),
-          const ProfileScreen()
+        bodyItems: const [
+          HomeScreen(),
+          FavouriteScreen(),
+          ChatScreen(),
+          ProfileScreen()
         ],
         actionBarView: Cart(
           key: UniqueKey(),

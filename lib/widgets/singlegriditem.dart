@@ -3,13 +3,18 @@ import 'package:ecommerce_app/screens/detailscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SingleGridItem extends StatelessWidget {
+class SingleGridItem extends StatefulWidget {
   const SingleGridItem(
       {super.key, required this.ctx, required ProductModel singleItem
       // required this.singleItem
       });
   final BoxConstraints ctx;
-  // final Item singleItem;
+
+  @override
+  State<SingleGridItem> createState() => _SingleGridItemState();
+}
+
+class _SingleGridItemState extends State<SingleGridItem> {
   @override
   Widget build(BuildContext context) {
     var ite = Provider.of<ProductModel>(context, listen: true);
@@ -40,8 +45,8 @@ class SingleGridItem extends StatelessWidget {
                         ? Container()
                         : Container(
                             constraints: BoxConstraints.expand(
-                              width: ctx.maxWidth * 0.12,
-                              height: ctx.maxHeight * 0.08,
+                              width: widget.ctx.maxWidth * 0.12,
+                              height: widget.ctx.maxHeight * 0.08,
                             ),
                             decoration: const BoxDecoration(
                                 color: Color.fromARGB(255, 147, 182, 243),
@@ -55,40 +60,42 @@ class SingleGridItem extends StatelessWidget {
                             )),
                           ),
                     const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        // ite.doFavorite();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child:
-                            // ite.isFavourite? const Icon(
-                            //         Icons.favorite,
-                            //         color: Colors.red,
-                            //         // size: 15,
-                            //       )
-                            //     :
-                            const Icon(
-                          Icons.favorite,
-                          color: Colors.grey,
+                    Consumer<ProductModel>(
+                        builder: (context, productModel, child) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            productModel.doFavourite();
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: ite.isFavourite!
+                              ? const Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                )
+                              : const Icon(
+                                  Icons.favorite,
+                                  color: Colors.grey,
+                                ),
                         ),
-                      ),
-                    ),
+                      );
+                    })
                   ],
                 ),
               ),
               Expanded(
                 flex: 2,
                 child: Container(
-                    // margin: const EdgeInsets.only(top: 25, bottom: 25),
                     padding: const EdgeInsets.all(2.0),
                     child: Stack(
                       children: [
                         Container(
-                          padding: EdgeInsets.all(ctx.maxHeight * 0.03),
+                          padding: EdgeInsets.all(widget.ctx.maxHeight * 0.03),
                           decoration: const BoxDecoration(),
                           width: double.infinity,
-                          height: ctx.maxHeight * 0.2,
+                          height: widget.ctx.maxHeight * 0.2,
                           child: Image.network(
                             ite.imageUrl![0],
                             height: 50,
@@ -98,7 +105,7 @@ class SingleGridItem extends StatelessWidget {
                     )),
               ),
               SizedBox(
-                height: ctx.maxHeight * 0.02,
+                height: widget.ctx.maxHeight * 0.02,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 5, right: 5),
@@ -110,7 +117,7 @@ class SingleGridItem extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: ctx.maxHeight * 0.02,
+                height: widget.ctx.maxHeight * 0.02,
               ),
               Text(
                 '\$ ${ite.price}',

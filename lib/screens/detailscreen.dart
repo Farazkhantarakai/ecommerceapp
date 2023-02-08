@@ -1,6 +1,5 @@
 import 'package:ecommerce_app/providers/dummy_data.dart';
 import 'package:ecommerce_app/models/Product.dart';
-import 'package:ecommerce_app/models/item.dart';
 import 'package:ecommerce_app/widgets/carousolcontainer.dart';
 import 'package:ecommerce_app/widgets/productdetails.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +20,7 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     var tData = ModalRoute.of(context)!.settings.arguments as ProductModel;
     var cData = Provider.of<Products>(context, listen: false).getProducts;
+    print(cData);
     //singlewhere will give you that single item
     var tak = cData.singleWhere((element) => element.id == tData.id);
     //this will calculate sizes dynamically
@@ -81,23 +81,23 @@ class _DetailScreenState extends State<DetailScreen> {
           ),
         ),
         actions: [
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  // tak.doFavorite();
-                });
-              },
-              icon:
-                  // tak.isFavourite!
-                  //     ? const Icon(
-                  //         Icons.favorite,
-                  //         color: Colors.red,
-                  //       )
-                  //     :
-                  const Icon(
-                Icons.favorite,
-                color: Colors.grey,
-              ))
+          Consumer(builder: (context, data, child) {
+            return IconButton(
+                onPressed: () {
+                  setState(() {
+                    tak.doFavourite();
+                  });
+                },
+                icon: tak.isFavourite!
+                    ? const Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      )
+                    : const Icon(
+                        Icons.favorite,
+                        color: Colors.grey,
+                      ));
+          })
         ],
         centerTitle: true,
         title: const Text.rich(TextSpan(
