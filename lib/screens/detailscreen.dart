@@ -20,7 +20,7 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     var tData = ModalRoute.of(context)!.settings.arguments as ProductModel;
     var cData = Provider.of<Products>(context, listen: false).getProducts;
-    print(cData);
+
     //singlewhere will give you that single item
     var tak = cData.singleWhere((element) => element.id == tData.id);
     //this will calculate sizes dynamically
@@ -28,25 +28,31 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
       appBar: detailScreenBar(tak),
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
             //caraousol container
-            Container(
-              width: double.infinity,
-              height: (mdq.size.height -
-                      appBar.preferredSize.height -
-                      mdq.viewPadding.top) *
-                  0.4,
-              decoration: const BoxDecoration(),
-              child: CarousolContainer(tak: tak),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: double.infinity,
+                height: (mdq.size.height -
+                        appBar.preferredSize.height -
+                        mdq.viewPadding.top) *
+                    0.4,
+                decoration: const BoxDecoration(),
+                child: CarousolContainer(tak: tak),
+              ),
             ),
             // product detail container
-            Container(
-              width: double.infinity,
-              height: mdq.size.height * 0.5,
-              decoration: const BoxDecoration(),
-              child: ProductDetail(
-                tak: tak,
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                height: mdq.size.height * 0.5,
+                decoration: const BoxDecoration(),
+                child: ProductDetail(
+                  tak: tak,
+                ),
               ),
             ),
             //positioned

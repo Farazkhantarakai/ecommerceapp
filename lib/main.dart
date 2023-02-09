@@ -35,12 +35,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
+          ChangeNotifierProvider.value(
+            value: CartItem(),
+          ),
           ChangeNotifierProvider.value(value: Auth()),
           ChangeNotifierProvider.value(
             value: Products(),
-          ),
-          ChangeNotifierProvider.value(
-            value: CartItem(),
           ),
           ChangeNotifierProvider.value(value: ProductModel())
         ],
@@ -88,10 +88,18 @@ class MyHomeApp extends StatefulWidget {
 
 class _MyHomeAppState extends State<MyHomeApp> {
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero).then((_) {
+      Provider.of<CartItem>(context, listen: false).fetchCartItem();
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var item = Provider.of<CartItem>(context).getCartItem;
-
     return CurvedNavBar(
         actionButton: CurvedActionBar(
             onTab: (value) {
@@ -114,26 +122,28 @@ class _MyHomeAppState extends State<MyHomeApp> {
                     color: Color.fromARGB(255, 120, 199, 252),
                   ),
                 ),
-                Positioned(
-                    right: 10,
-                    top: 7,
-                    child: Container(
-                      width: 27,
-                      height: 27,
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${item.length}',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                Consumer<CartItem>(builder: (context, cart, child) {
+                  return Positioned(
+                      right: 10,
+                      top: 7,
+                      child: Container(
+                        width: 27,
+                        height: 27,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
                         ),
-                      ),
-                    )),
+                        child: Center(
+                          child: Text(
+                            '${cart.cartLength}',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                          ),
+                        ),
+                      ));
+                })
               ],
             ),
             inActiveIcon: Stack(
@@ -151,26 +161,30 @@ class _MyHomeAppState extends State<MyHomeApp> {
                     color: Color.fromARGB(255, 120, 199, 252),
                   ),
                 ),
-                Positioned(
-                    right: 10,
-                    top: 7,
-                    child: Container(
-                      width: 27,
-                      height: 27,
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${item.length}',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ),
-                      ),
-                    )),
+                Consumer<CartItem>(
+                  builder: (context, cart, child) {
+                    return Positioned(
+                        right: 10,
+                        top: 7,
+                        child: Container(
+                          width: 27,
+                          height: 27,
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${cart.cartLength}',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                          ),
+                        ));
+                  },
+                )
               ],
             ),
             text: ""),

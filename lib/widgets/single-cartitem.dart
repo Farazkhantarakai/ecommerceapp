@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SingleCartItem extends StatefulWidget {
-  const SingleCartItem({super.key});
-
+  SingleCartItem({super.key, required this.itemKey});
+  String itemKey;
   @override
   State<SingleCartItem> createState() => _SingleCartItemState();
 }
@@ -18,20 +18,7 @@ class _SingleCartItemState extends State<SingleCartItem> {
     var cartItem = Provider.of<CartItem>(context, listen: true);
     return GestureDetector(
       onLongPress: () {
-        showSnackBar(context, 'clicked');
         cartItem.changeLongPress();
-
-        // CartModel cm = CartModel(
-        //     cartModel.id,
-        //     cartModel.title,
-        //     cartModel.image,
-        //     cartModel.price,
-        //     cartModel.size,
-        //     cartModel.color,
-        //     cartModel.perOff,
-        //     cartModel.quantity,
-        //     true);
-        // cartItem.addDeletingCartItem(cm);
       },
       child: Stack(
         children: [
@@ -50,16 +37,14 @@ class _SingleCartItemState extends State<SingleCartItem> {
                   Container(
                       width: 60,
                       height: double.infinity,
-                      // color: Colors.amberAccent,
                       decoration: const BoxDecoration(),
                       child: Center(
                           child: Image.network(
-                        cartModel.image![0].toString(),
+                        cartModel.image.toString(),
                       ))),
                   Container(
                     width: 170,
                     height: double.infinity,
-                    // color: Colors.blueGrey,
                     decoration: const BoxDecoration(),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -106,7 +91,6 @@ class _SingleCartItemState extends State<SingleCartItem> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            // setState(() {
                             if (cartModel.quantity!.toInt() <= 1) {
                               cartModel.quantity = 1;
                               showSnackBar(context,
@@ -121,11 +105,12 @@ class _SingleCartItemState extends State<SingleCartItem> {
                                   cartModel.size,
                                   cartModel.color,
                                   cartModel.perOff,
-                                  cartModel.quantity);
+                                  cartModel.quantity,
+                                  false,
+                                  widget.itemKey);
 
                               cartItem.updataCartItem(cm, context);
                             }
-                            // });
                           },
                           child: Container(
                             width: 30,
@@ -159,7 +144,9 @@ class _SingleCartItemState extends State<SingleCartItem> {
                                 cartModel.size,
                                 cartModel.color,
                                 cartModel.perOff,
-                                cartModel.quantity);
+                                cartModel.quantity,
+                                false,
+                                widget.itemKey);
 
                             cartItem.updataCartItem(cm, context);
                           },
@@ -191,10 +178,22 @@ class _SingleCartItemState extends State<SingleCartItem> {
                       onChanged: (value) {
                         setState(() {
                           cartModel.changeChecked();
-
+                          CartModel cm = CartModel(
+                              cartModel.id,
+                              cartModel.title,
+                              cartModel.image,
+                              cartModel.price,
+                              cartModel.size,
+                              cartModel.color,
+                              cartModel.perOff,
+                              cartModel.quantity,
+                              false,
+                              widget.itemKey);
                           if (cartModel.isChecked == true) {
-                            cartItem.addDeletingCartItem(cartModel);
-                          } else {}
+                            cartItem.addDeletingCartItem(cm);
+                          } else {
+                            cartItem.removeDeletingCartItem(cm);
+                          }
                         });
                       }))
               : Container()

@@ -13,6 +13,10 @@ class CartItem extends ChangeNotifier {
     return {...cartItem};
   }
 
+  int get cartLength {
+    return cartItem.length;
+  }
+
   bool isLongPress = false;
 
   //this will store items for deleting from cart
@@ -30,37 +34,53 @@ class CartItem extends ChangeNotifier {
 
   changeLongPress() {
     isLongPress = !isLongPress;
-    if (kDebugMode) {
-      print('islong press $isLongPress');
-    }
     notifyListeners();
   }
 
-  int get getTotalTax {
-    cartItem.forEach((key, value) {
-      quantity = value.quantity!;
-    });
-    return quantity;
+  // int get getTotalTax {
+  //   if (cartItem.isEmpty) {
+  //     quantity = 0;
+  //   } else {
+  //     cartItem.forEach((key, value) {
+  //       quantity++;
+  //     });
+  //   }
+  //   return quantity;
+  // }
+
+  removeItemFromDeletion() {
+    // deleteCartItem.forEach((value) {
+    //   value.changeChecked();
+    // });
+    notifyListeners();
   }
 
   addDeletingCartItem(CartModel cm) {
     deleteCartItem.add(cm);
+    if (kDebugMode) {
+      print('adding item${cm.id}  added delete items are $deleteCartItem');
+    }
     notifyListeners();
   }
 
-  doDeleteItems() async {
+  Future<void> doDeleteItems() async {
     deleteCartItem.forEach((element) async {
       String url =
-          'https://completeecommerceapp-default-rtdb.firebaseio.com/cart/2.json';
-
+          'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/cart/${element.key}.json';
       var response = await http.delete(Uri.parse(url));
-
-      cartItem.remove(element.id);
+      // print(response.body);
+      notifyListeners();
+      if (response.statusCode == 200) {
+        cartItem.remove(element.id);
+      } else {
+        throw Exception('Something Went Wrong');
+      }
     });
   }
 
   removeDeletingCartItem(CartModel cm) {
-    deleteCartItem.remove(cm);
+    deleteCartItem.removeWhere((element) => element.id == cm.id);
+    print('deleting item are $deleteCartItem');
     notifyListeners();
   }
 
@@ -71,7 +91,32 @@ class CartItem extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> fetchCartItem() async {
+    String url =
+        'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/cart.json';
+    var response = await http.get(Uri.parse(url));
+
+    var result = jsonDecode(response.body);
+    if (result == null) {
+      cartItem = {};
+      notifyListeners();
+      return;
+    }
+    Map<String, CartModel> cartItems = {};
+    result.forEach((key, value) {
+      cartItems[key] = CartModel.fromJson(value);
+    });
+    cartItem = cartItems;
+    // if (kDebugMode) {
+    //   print(cartItem);
+    // }
+    notifyListeners();
+  }
+
   Future<String> addCartItem(CartModel cm, context) async {
+    if (kDebugMode) {
+      print(cm.image);
+    }
     var httpresponse = '';
     if (cartItem.containsKey(cm.id)) {
       SnackBar snackBar = const SnackBar(
@@ -80,7 +125,7 @@ class CartItem extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
       String url =
-          'https://completeecommerceapp-default-rtdb.firebaseio.com/cart.json';
+          'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/cart.json';
       try {
         var response = await http.post(Uri.parse(url),
             body: jsonEncode({
@@ -89,12 +134,11 @@ class CartItem extends ChangeNotifier {
               'image': cm.image,
               'size': cm.size,
               'price': cm.price,
-              'color': cm.color!.value,
+              'color': cm.color!,
               'quantity': cm.quantity,
               'isChecked': cm.isChecked,
               'perOff': cm.perOff,
             }));
-
         var result = jsonDecode(response.body.toString());
 
         if (result['error'] != null) {
@@ -103,19 +147,20 @@ class CartItem extends ChangeNotifier {
         }
 
         if (response.statusCode == 200) {
-          cartItem.putIfAbsent('${cm.id}', () => cm);
-          // SnackBar snackBar = const SnackBar(
-          //   content: Text('Item added to cart'),
-          // );
-          // ScaffoldMessenger.of(context).showSnackBar(snackBar);
           httpresponse = 'success';
           notifyListeners();
         }
       } catch (err) {
         dialogue(context, '$err');
       }
+      notifyListeners();
     }
     notifyListeners();
     return httpresponse;
   }
 }
+
+// we have error response only for get and post while for the rest you have to do like
+// if (response.statusCode >= 400)  it means that there is something wrong
+// what jsonEncode do it convert  json to a String
+//and jsonDecode do reversing of it like it convert string to a json

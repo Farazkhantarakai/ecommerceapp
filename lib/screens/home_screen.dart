@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/providers/cartitem.dart';
 import 'package:ecommerce_app/providers/dummy_data.dart';
 import 'package:ecommerce_app/widgets/appdrawer.dart';
 import 'package:ecommerce_app/widgets/backpack.dart';

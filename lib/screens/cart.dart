@@ -14,12 +14,15 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
+  bool? isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     var mdq = MediaQuery.of(context).size;
     var cartitem = Provider.of<CartItem>(context, listen: true);
+
     double total = cartitem.getTotal;
-    double tax = cartitem.getTotalTax * 5;
+    double tax = cartitem.getCartItem.length * 5;
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 233, 233, 233),
@@ -32,6 +35,7 @@ class _CartState extends State<Cart> {
                   child: IconButton(
                     onPressed: () {
                       cartitem.changeLongPress();
+                      cartitem.removeItemFromDeletion();
                     },
                     icon: const Icon(
                       Icons.dangerous,
@@ -40,30 +44,19 @@ class _CartState extends State<Cart> {
                   ),
                 )
               : Container(),
-          // Container(
-          //   decoration: const BoxDecoration(),
-          //   child: Row(
-          //     children: const [
-          //       SizedBox(
-          //         width: 20,
-          //       ),
-          //       // InkWell(
-          //       //     onTap: () {
-          //       //       Navigator.pop(context);
-          //       //     },
-          //       //     child: const Icon(
-          //       //       Icons.arrow_back,
-          //       //       color: Colors.black,
-          //       //     )),
-          //     ],
-          //   ),
-          // ),
           actions: [
             IconButton(
-                onPressed: () {
+                onPressed: () async {
                   setState(() {
-                    cartitem.doDeleteItems();
-                    cartitem.changeLongPress();
+                    isLoading = true;
+                  });
+
+                  await cartitem.doDeleteItems();
+                  cartitem.changeLongPress();
+                  cartitem.fetchCartItem().then((v) {
+                    setState(() {
+                      isLoading = false;
+                    });
                   });
                 },
                 icon: const Icon(
@@ -81,93 +74,105 @@ class _CartState extends State<Cart> {
               color: Colors.grey,
             ),
           )),
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            height: mdq.height * 0.57,
-            decoration: const BoxDecoration(),
-            child: ListView.builder(
-                itemCount: cartitem.getCartItem.length,
-                itemBuilder: (context, index) {
-                  return ChangeNotifierProvider<CartModel>.value(
-                    //in this way we have to take this shit
-                    value: cartitem.getCartItem.values.toList()[index],
-                    builder: ((context, child) {
-                      return const SingleCartItem();
-                    }),
-                  );
-                }),
-          ),
-// Check out add button and total
-          Container(
-            padding: const EdgeInsets.only(left: 25, right: 25),
-            width: double.infinity,
-            height: 52,
-            decoration: const BoxDecoration(),
-            child: Row(
+      body: isLoading!
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Colors.grey,
+              ),
+            )
+          : Column(
               children: [
-                Text.rich(TextSpan(
-                    text: 'Subtotal:  ',
-                    style: const TextStyle(
-                        fontSize: 17,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold),
+                Container(
+                  width: double.infinity,
+                  height: mdq.height * 0.57,
+                  decoration: const BoxDecoration(),
+                  child: ListView.builder(
+                      itemCount: cartitem.getCartItem.length,
+                      itemBuilder: (context, index) {
+                        return ChangeNotifierProvider<CartModel>.value(
+                          //in this way we have to take single item from a map
+                          value: cartitem.getCartItem.values.toList()[index],
+                          builder: ((context, child) {
+                            return SingleCartItem(
+                                //i am passing the of that particular element as well
+                                itemKey:
+                                    cartitem.getCartItem.keys.toList()[index]);
+                          }),
+                        );
+                      }),
+                ),
+// Check out add button and total
+                Container(
+                  padding: const EdgeInsets.only(left: 25, right: 25),
+                  width: double.infinity,
+                  height: 52,
+                  decoration: const BoxDecoration(),
+                  child: Row(
                     children: [
-                      TextSpan(
-                          text: '\$${total + tax}',
+                      Text.rich(TextSpan(
+                          text: 'Subtotal:  ',
                           style: const TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.bold))
-                    ])),
-                const Spacer(),
-                Text.rich(TextSpan(
-                    text: 'Taxes:  ',
-                    style: const TextStyle(
-                        fontSize: 17,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold),
-                    children: [
-                      TextSpan(
-                          text: '\$$tax',
+                              fontSize: 17,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold),
+                          children: [
+                            TextSpan(
+                                text: '\$${total + tax}',
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold))
+                          ])),
+                      const Spacer(),
+                      Text.rich(TextSpan(
+                          text: 'Taxes:  ',
                           style: const TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.bold))
-                    ]))
-              ],
-            ),
-          ),
+                              fontSize: 17,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold),
+                          children: [
+                            TextSpan(
+                                text: '\$$tax',
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold))
+                          ]))
+                    ],
+                  ),
+                ),
 
 //total plus checkout button
-          Container(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            width: double.infinity,
-            height: mdq.height * 0.099,
-            decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 248, 248, 248),
-                borderRadius: BorderRadius.only()),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '\$ ${cartitem.getCartItem.length * 5 + total} ',
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 42, 74, 253)),
-                    onPressed: () {},
-                    icon: const Icon(Icons.price_check),
-                    label: const Text(
-                      'Check Out',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ))
+                Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  width: double.infinity,
+                  height: mdq.height * 0.099,
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 248, 248, 248),
+                      borderRadius: BorderRadius.only()),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '\$ ${cartitem.getCartItem.length * 5 + total} ',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 42, 74, 253)),
+                          onPressed: () {},
+                          icon: const Icon(Icons.price_check),
+                          label: const Text(
+                            'Check Out',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ))
+                    ],
+                  ),
+                )
               ],
             ),
-          )
-        ],
-      ),
     );
   }
 }

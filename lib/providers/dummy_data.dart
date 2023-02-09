@@ -85,9 +85,11 @@ class Products extends ChangeNotifier {
         'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/Product.json';
     var response = await http.get(Uri.parse(url));
     var result = jsonDecode(response.body.toString());
-    print(result);
+    if (kDebugMode) {
+      print(result);
+    }
     if (response.statusCode == 200) {
-      for (var item in result) {
+      for (Map<String, dynamic> item in result) {
         var singleItem = ProductModel.fromJson(item);
         data.add(singleItem);
       }

@@ -31,7 +31,6 @@ class GetStartedScreen extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                Shared().saveFirst();
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) {
                   return const LogInScreen();

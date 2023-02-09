@@ -29,9 +29,7 @@ class _SingleGridItemState extends State<SingleGridItem> {
             top: 2,
           ),
           padding: const EdgeInsets.all(4.0),
-          constraints: const BoxConstraints.expand(
-              //  height: widget.ctx.maxHeight * 0.3,
-              ),
+          constraints: const BoxConstraints.expand(),
           decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(12))),

@@ -93,171 +93,183 @@ class _ProductDetailState extends State<ProductDetail> {
     var cartItem = Provider.of<CartItem>(context, listen: false);
 
     return LayoutBuilder(builder: (context, ctx) {
-      return Column(
+      return Stack(
         children: [
-          Container(
-            constraints: BoxConstraints.expand(
-              width: double.infinity,
-              height: ctx.maxHeight * 0.6,
-            ),
-            decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 226, 223, 223),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(35),
-                    topRight: Radius.circular(35))),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 5, right: 10, left: 10),
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      LimitedBox(
-                        maxWidth: 250,
-                        child: Text(
-                          widget.tak.title.toString(),
-                          softWrap: false,
-                          style: const TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const Spacer(),
-                      const Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 5),
-                        child: Text(
-                          '(${widget.tak.rating})',
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              constraints: BoxConstraints.expand(
+                width: double.infinity,
+                height: ctx.maxHeight * 0.7,
+              ),
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 226, 223, 223),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(35),
+                      topRight: Radius.circular(35))),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5, right: 10, left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: ctx.maxHeight * 0.04,
+                    ),
+                    Row(
                       children: [
-                        Text(
-                          '${widget.tak.description}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 112, 112, 112)),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        SingleChildScrollView(
-                          child: Row(
-                            children: [
-                              const Text(
-                                'Size:',
-                                style:
-                                    TextStyle(fontSize: 17, color: Colors.grey),
-                              ),
-                              ...generatBox(
-                                  widget.tak.size!.length, widget.tak.size)
-                            ],
+                        LimitedBox(
+                          maxWidth: 250,
+                          child: Text(
+                            widget.tak.title.toString(),
+                            softWrap: false,
+                            style: const TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
+                        const Spacer(),
+                        const Icon(
+                          Icons.star,
+                          color: Colors.yellow,
                         ),
-                        SingleChildScrollView(
-                          child: Row(
-                            children: [
-                              const Text('Available Colors:',
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.grey)),
-                              ...generateColor(
-                                  widget.tak.colors!.length, widget.tak.colors)
-                            ],
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Text(
+                            '(${widget.tak.rating})',
+                            style: const TextStyle(color: Colors.grey),
                           ),
-                        )
+                        ),
                       ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: ctx.maxHeight * 0.1),
-            width: double.infinity,
-            height: ctx.maxHeight * 0.2,
-            decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Center(
-                child: Row(
-                  children: [
-                    Text(
-                      '\$${widget.tak.price}',
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                    SizedBox(
+                      height: ctx.maxHeight * 0.04,
                     ),
-                    const Spacer(),
-                    InkWell(
-                      onTap: () async {
-                        Color initialColor =
-                            convertColor(widget.tak.colors![0]);
-                        CartModel cm = CartModel(
-                            widget.tak.id,
-                            widget.tak.title,
-                            widget.tak.imageUrl![0].toString(),
-                            double.parse(widget.tak.price.toString()),
-                            size ?? widget.tak.size![0],
-                            selectColor ?? initialColor,
-                            widget.tak.off == '0'
-                                ? 0
-                                : int.parse(widget.tak.off.toString()),
-                            1);
-                        String result = await cartItem.addCartItem(cm, context);
-                        if (result == 'success') {
-                          Fluttertoast.showToast(msg: 'Item Added To Cart');
-                        }
-                      },
-                      child: Container(
-                        width: 150,
-                        height: ctx.maxHeight * 0.1,
-                        decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 236, 236, 236),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        child: Consumer<CartItem>(
-                          builder: (context, ct, child) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(
-                                  Icons.shopping_cart,
-                                  color: Colors.grey,
-                                ),
-                                Text(
-                                  'Add to Cart',
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${widget.tak.description}',
+                            maxLines: 2,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 112, 112, 112)),
+                          ),
+                          SizedBox(
+                            height: ctx.maxHeight * 0.08,
+                          ),
+                          SingleChildScrollView(
+                            child: Row(
+                              children: [
+                                const Text(
+                                  'Size:',
                                   style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold),
-                                )
+                                      fontSize: 17, color: Colors.grey),
+                                ),
+                                ...generatBox(
+                                    widget.tak.size!.length, widget.tak.size)
                               ],
-                            );
-                          },
-                        ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SingleChildScrollView(
+                            child: Row(
+                              children: [
+                                const Text('Available Colors:',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey)),
+                                ...generateColor(widget.tak.colors!.length,
+                                    widget.tak.colors)
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                     )
                   ],
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              margin: EdgeInsets.only(top: ctx.maxHeight * 0.1),
+              width: double.infinity,
+              height: ctx.maxHeight * 0.2,
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Center(
+                  child: Row(
+                    children: [
+                      Text(
+                        '\$${widget.tak.price}',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () async {
+                          Color firstColor =
+                              convertColor(widget.tak.colors![0]);
+                          // print('id ${widget.tak.id}  title ${widget.tak.title}  imageurl ${widget.tak.imageUrl![0] } price ${widget.tak.price} size $size ');
+                          CartModel cm = CartModel(
+                              widget.tak.id,
+                              widget.tak.title,
+                              widget.tak.imageUrl![0].toString(),
+                              double.parse(widget.tak.price.toString()),
+                              size ?? widget.tak.size![0],
+                              selectColor?.value.toInt() ?? firstColor.value,
+                              widget.tak.off == '0'
+                                  ? 0
+                                  : int.parse(widget.tak.off.toString()),
+                              1);
+                          String result =
+                              await cartItem.addCartItem(cm, context);
+                          if (result == 'success') {
+                            Fluttertoast.showToast(
+                              msg: 'Item Added To Cart',
+                              backgroundColor: Colors.blue.shade400,
+                              textColor: Colors.white,
+                            );
+                            await cartItem.fetchCartItem();
+                          }
+                        },
+                        child: Container(
+                          width: 150,
+                          height: ctx.maxHeight * 0.1,
+                          decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 236, 236, 236),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          child: Consumer<CartItem>(
+                            builder: (context, ct, child) {
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(
+                                    Icons.shopping_cart,
+                                    color: Colors.grey,
+                                  ),
+                                  Text(
+                                    'Add to Cart',
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
