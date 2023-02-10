@@ -125,7 +125,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                                           return GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                productModel.doFavourite();
+                                                // productModel.doFavourite();
                                               });
                                             },
                                             child: Padding(

@@ -16,7 +16,6 @@ import 'package:ecommerce_app/screens/home_screen.dart';
 import 'package:ecommerce_app/screens/profile_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 
 void main() {
@@ -35,13 +34,19 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider.value(
-            value: CartItem(),
-          ),
           ChangeNotifierProvider.value(value: Auth()),
-          ChangeNotifierProvider.value(
-            value: Products(),
-          ),
+
+          // ChangeNotifierProxyProvider<Auth,CartItem>(creat , update: ()),
+          ChangeNotifierProxyProvider<Auth, CartItem>(
+              create: (_) => CartItem('', {}),
+              update: (_, auth, pre) => CartItem(auth.token, pre!.getCartItem)),
+          // ChangeNotifierProvider.value(
+          //   value: CartItem(),
+          // ),
+          ChangeNotifierProxyProvider<Auth, Products>(
+              create: (context) => Products(''),
+              update: (context, auth, prev) => Products(auth.token)),
+
           ChangeNotifierProvider.value(value: ProductModel())
         ],
         child: Consumer<Auth>(

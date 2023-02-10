@@ -29,7 +29,8 @@ class _ListItemState extends State<ListItem> {
             return ChangeNotifierProvider<ProductModel>.value(
               value: pro[index],
               child: SingleGridItem(
-                singleItem: pro[index],
+                //  singleItem: pro[index],
+                value: index,
                 ctx: ctx,
               ),
             );

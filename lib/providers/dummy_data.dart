@@ -11,6 +11,9 @@ class Products extends ChangeNotifier {
   List<ProductModel> mdata = [];
   String sortItem = '';
 
+  String authToken;
+  Products(this.authToken);
+
   void setSortingItem(String clickedItem) {
     sortItem = clickedItem;
     notifyListeners();
@@ -82,7 +85,7 @@ class Products extends ChangeNotifier {
   Future<void> fetchAndSet() async {
     data = [];
     String url =
-        'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/Product.json';
+        'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/Product.json?auth=$authToken';
     var response = await http.get(Uri.parse(url));
     var result = jsonDecode(response.body.toString());
     if (kDebugMode) {

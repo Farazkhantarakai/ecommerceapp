@@ -13,6 +13,9 @@ class CartItem extends ChangeNotifier {
     return {...cartItem};
   }
 
+  String token;
+  CartItem(this.token, this.cartItem);
+
   int get cartLength {
     return cartItem.length;
   }
@@ -66,7 +69,7 @@ class CartItem extends ChangeNotifier {
   Future<void> doDeleteItems() async {
     deleteCartItem.forEach((element) async {
       String url =
-          'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/cart/${element.key}.json';
+          'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/cart/${element.key}.json?auth=$token';
       var response = await http.delete(Uri.parse(url));
       // print(response.body);
       notifyListeners();

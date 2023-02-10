@@ -1,14 +1,19 @@
 import 'package:ecommerce_app/models/Product.dart';
+import 'package:ecommerce_app/providers/dummy_data.dart';
 import 'package:ecommerce_app/screens/detailscreen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SingleGridItem extends StatefulWidget {
-  const SingleGridItem(
-      {super.key, required this.ctx, required ProductModel singleItem
-      // required this.singleItem
-      });
+  SingleGridItem({
+    super.key,
+    required this.ctx,
+    // required this.singleItem
+    required this.value,
+  });
   final BoxConstraints ctx;
+  int value;
 
   @override
   State<SingleGridItem> createState() => _SingleGridItemState();
@@ -18,9 +23,12 @@ class _SingleGridItemState extends State<SingleGridItem> {
   @override
   Widget build(BuildContext context) {
     var ite = Provider.of<ProductModel>(context, listen: true);
+    var prod = Provider.of<Products>(context, listen: false);
+
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, DetailScreen.routName, arguments: ite);
+        Navigator.pushNamed(context, DetailScreen.routName,
+            arguments: {"cartModel": ite, "favouriteId": widget.value});
       },
       child: Container(
           margin: const EdgeInsets.only(
@@ -58,28 +66,28 @@ class _SingleGridItemState extends State<SingleGridItem> {
                             )),
                           ),
                     const Spacer(),
-                    Consumer<ProductModel>(
-                        builder: (context, productModel, child) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            productModel.doFavourite();
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: ite.isFavourite!
-                              ? const Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                )
-                              : const Icon(
-                                  Icons.favorite,
-                                  color: Colors.grey,
-                                ),
-                        ),
-                      );
-                    })
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (kDebugMode) {
+                            print(ite.id);
+                          }
+                          ite.toggleFavourite(widget.value, prod.authToken);
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ite.isFavourite!
+                            ? const Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              )
+                            : const Icon(
+                                Icons.favorite,
+                                color: Colors.grey,
+                              ),
+                      ),
+                    )
                   ],
                 ),
               ),

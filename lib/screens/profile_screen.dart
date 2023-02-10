@@ -1,4 +1,6 @@
+import 'package:ecommerce_app/providers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -7,7 +9,13 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [ElevatedButton(onPressed: () {}, child: const Text('LogOut'))],
+      children: [
+        ElevatedButton(
+            onPressed: () {
+              Provider.of<Auth>(context, listen: false).logOut();
+            },
+            child: const Text('LogOut'))
+      ],
     );
   }
 }

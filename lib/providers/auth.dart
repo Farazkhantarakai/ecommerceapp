@@ -19,8 +19,10 @@ class Auth extends ChangeNotifier {
     if (_expireDate != null &&
         _tokenId.isNotEmpty &&
         _expireDate!.isAfter(DateTime.now())) {
+      print(_tokenId);
       return _tokenId;
     }
+
     return '';
   }
 
@@ -89,15 +91,24 @@ class Auth extends ChangeNotifier {
     return true;
   }
 
-  logOut() {
+  logOut() async {
     _tokenId = '';
     _expireDate = null;
     _userId = '';
+    // if (kDebugMode) {
+    //   print(
+    //       'logout _tokenId $_tokenId  expiry date $_expireDate  userId  $_userId');
+    // }
     if (_timer != null) {
       _timer!.cancel();
       _timer = null;
     }
     notifyListeners();
+
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    //you can remove a specific stored data as well like this
+    // pref.remove('userData')   if you donot want to remove all the data then you can do it through this way
+    pref.clear();
   }
 
   autoLogOut() {
