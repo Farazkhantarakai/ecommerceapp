@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:ecommerce_app/models/httpexception.dart';
+import 'package:ecommerce_app/utils/constants.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +26,10 @@ class Auth extends ChangeNotifier {
     }
 
     return '';
+  }
+
+  String get userId {
+    return _userId;
   }
 
   Future<void> authenticate(
@@ -59,6 +65,25 @@ class Auth extends ChangeNotifier {
       }
     } catch (err) {
       rethrow;
+    }
+  }
+
+  Future<void> resetPassword(String email) async {
+    if (email.toString().trim().isNotEmpty) {
+      String url =
+          'https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key=$api_key';
+      try {
+        final response = await http.post(Uri.parse(url),
+            body: {"oobCode": "PASSWORD_RESET_CODE", "newPassword": email});
+        final result = jsonDecode(response.body);
+        if (response.statusCode >= 400) {
+          print(result['error']);
+        }
+      } catch (err) {
+        print(err);
+        throw HttpException(err.toString());
+      }
+      notifyListeners();
     }
   }
 

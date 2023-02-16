@@ -18,18 +18,16 @@ class _DetailScreenState extends State<DetailScreen> {
   late AppBar appBar;
   @override
   Widget build(BuildContext context) {
-    var tData =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    var nData = tData['cartModel'] as ProductModel;
-    var fId = tData['favouriteId'];
+    var tData = ModalRoute.of(context)!.settings.arguments as ProductModel;
+
     var cData = Provider.of<Products>(context, listen: false).getProducts;
 
     //singlewhere will give you that single item
-    var tak = cData.singleWhere((element) => element.id == nData.id);
+    var tak = cData.singleWhere((element) => element.id == tData.id);
     //this will calculate sizes dynamically
     var mdq = MediaQuery.of(context);
     return Scaffold(
-      appBar: detailScreenBar(tak, fId),
+      appBar: detailScreenBar(tak),
       body: SafeArea(
         child: Stack(
           children: [
@@ -67,7 +65,9 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   //  Item tak
-  detailScreenBar(ProductModel tak, fId) {
+  detailScreenBar(
+    ProductModel tak,
+  ) {
     appBar = AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
@@ -90,14 +90,15 @@ class _DetailScreenState extends State<DetailScreen> {
           ),
         ),
         actions: [
-          Consumer<ProductModel>(builder: (context, data, child) {
+          Consumer2<ProductModel, Products>(
+              builder: (context, data, prod, child) {
             return IconButton(
                 onPressed: () {
                   setState(() {
-                    // data.toggleFavourite(fId);
+                    data.toggleFavourite(tak.id, prod.authToken, prod.userId);
                   });
                 },
-                icon: data.isFavourite!
+                icon: tak.isFavourite!
                     ? const Icon(
                         Icons.favorite,
                         color: Colors.red,

@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/models/httpexception.dart';
 import 'package:ecommerce_app/providers/auth.dart';
+import 'package:ecommerce_app/screens/authservices/forgot_passwod.dart';
 import 'package:ecommerce_app/screens/authservices/signupscreen.dart';
 import 'package:ecommerce_app/utils/utils.dart';
 import 'package:ecommerce_app/widgets/circlepainter.dart';
@@ -246,9 +247,15 @@ class _LogInScreenState extends State<LogInScreen> {
                                         ],
                                       ),
                                     ),
-                                    const Text(
-                                      'Forgot Password?',
-                                      style: TextStyle(color: Colors.blue),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, ForgotPassword.routName);
+                                      },
+                                      child: const Text(
+                                        'Forgot Password?',
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
                                     ),
                                     SizedBox(
                                       height: mdq.height * 0.04,
@@ -267,7 +274,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                                   .logInUser(
                                                       _emailController.text,
                                                       _passwordController.text)
-                                                  .then(() {
+                                                  .then((value) {
                                                 setState(() {
                                                   isloading = false;
                                                 });

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CartModel with ChangeNotifier {
   String? key;
-  String? id;
+  int? id;
   String? title;
   String? image;
   double? price;

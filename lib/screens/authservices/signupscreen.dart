@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/models/httpexception.dart';
 import 'package:ecommerce_app/providers/auth.dart';
+import 'package:ecommerce_app/screens/authservices/forgot_passwod.dart';
 import 'package:ecommerce_app/screens/authservices/loginscreen.dart';
 import 'package:ecommerce_app/utils/utils.dart';
 
@@ -192,7 +193,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             context, '${err.message.toString}');
                                       }
                                     } catch (err) {
-                                      throw err;
+                                      rethrow;
                                     }
                                   }
                                 },

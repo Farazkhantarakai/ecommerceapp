@@ -1,14 +1,13 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:http/http.dart' as http;
 
 class ProductModel extends ChangeNotifier {
   String? category;
   List<dynamic>? colors;
   String? description;
-  String? id;
+  int? id;
   List<dynamic>? imageUrl;
   String? off;
   String? price;
@@ -37,7 +36,6 @@ class ProductModel extends ChangeNotifier {
     colors = data['colors'];
     description = data['description'];
     imageUrl = data['image_url'];
-
     off = data['off'];
     price = data['price'];
     rating = data['rating'];
@@ -51,12 +49,12 @@ class ProductModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  toggleFavourite(newId, authToken) async {
+  toggleFavourite(newId, authToken, userId) async {
     final oldStatus = isFavourite;
     isFavourite = !isFavourite!;
     notifyListeners();
     String url =
-        'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/Product/$newId.json';
+        'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/userFavourite/$userId/$newId.json?auth=$authToken';
 
     try {
       var response = await http.patch(Uri.parse(url),

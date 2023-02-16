@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:ecommerce_app/models/Product.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class Products extends ChangeNotifier {
@@ -12,7 +14,8 @@ class Products extends ChangeNotifier {
   String sortItem = '';
 
   String authToken;
-  Products(this.authToken);
+  String userId;
+  Products(this.authToken, this.userId);
 
   void setSortingItem(String clickedItem) {
     sortItem = clickedItem;
@@ -86,18 +89,49 @@ class Products extends ChangeNotifier {
     data = [];
     String url =
         'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/Product.json?auth=$authToken';
-    var response = await http.get(Uri.parse(url));
-    var result = jsonDecode(response.body.toString());
-    if (kDebugMode) {
-      print(result);
-    }
-    if (response.statusCode == 200) {
-      for (Map<String, dynamic> item in result) {
-        var singleItem = ProductModel.fromJson(item);
-        data.add(singleItem);
+    try {
+      final response = await http
+          .get(Uri.parse(url))
+          .timeout(const Duration(milliseconds: 5000));
+      final result = jsonDecode(response.body);
+      if (result == null) {
+        return;
       }
-    }
+      // print(result);
 
-    notifyListeners();
+      url =
+          'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/userFavourite/$userId.json?auth=$authToken';
+      final favResponse = await http.get(
+        Uri.parse(url),
+      );
+      final favResult = jsonDecode(favResponse.body) as Map<String, dynamic>;
+      if (kDebugMode) {
+        print(favResult);
+      }
+      List<ProductModel> loadedProduct = [];
+      if (response.statusCode == 200) {
+        result.forEach((item) {
+          final favorite = favResult[item['id'].toString()];
+
+          loadedProduct.add(ProductModel(
+              id: item['id'],
+              category: item['category'],
+              colors: item['colors'],
+              description: item['description'],
+              imageUrl: item['image_url'],
+              off: item['off'],
+              price: item['price'],
+              size: item['size'],
+              title: item['title'],
+              rating: item['rating'],
+              isFavourite:
+                  favorite == null ? false : favorite['isFavourite'] ?? false));
+        });
+
+        data = loadedProduct;
+      }
+    } catch (err) {
+      Fluttertoast.showToast(msg: err.toString());
+    }
   }
 }

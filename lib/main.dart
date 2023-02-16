@@ -5,10 +5,11 @@ import 'package:ecommerce_app/providers/dummy_data.dart';
 import 'package:ecommerce_app/models/Product.dart';
 import 'package:ecommerce_app/providers/auth.dart';
 import 'package:ecommerce_app/providers/cartitem.dart';
+import 'package:ecommerce_app/screens/authservices/forgot_passwod.dart';
 import 'package:ecommerce_app/screens/authservices/loginscreen.dart';
 import 'package:ecommerce_app/screens/authservices/signupscreen.dart';
 import 'package:ecommerce_app/screens/cart.dart';
-import 'package:ecommerce_app/screens/chatscreen.dart';
+import 'package:ecommerce_app/screens/order.dart';
 import 'package:ecommerce_app/screens/detailscreen.dart';
 import 'package:ecommerce_app/screens/favouritescreen.dart';
 import 'package:ecommerce_app/screens/getstaretedScreen.dart';
@@ -44,8 +45,9 @@ class _MyAppState extends State<MyApp> {
           //   value: CartItem(),
           // ),
           ChangeNotifierProxyProvider<Auth, Products>(
-              create: (context) => Products(''),
-              update: (context, auth, prev) => Products(auth.token)),
+              create: (context) => Products('', ''),
+              update: (context, auth, prev) =>
+                  Products(auth.token, auth.userId)),
 
           ChangeNotifierProvider.value(value: ProductModel())
         ],
@@ -77,6 +79,7 @@ class _MyAppState extends State<MyApp> {
                 DetailScreen.routName: (context) => const DetailScreen(),
                 SignUpScreen.routName: (context) => const SignUpScreen(),
                 LogInScreen.routName: (context) => const LogInScreen(),
+                ForgotPassword.routName: (context) => ForgotPassword()
               },
             );
           },
@@ -241,7 +244,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
         bodyItems: const [
           HomeScreen(),
           FavouriteScreen(),
-          ChatScreen(),
+          OrderScreen(),
           ProfileScreen()
         ],
         actionBarView: Cart(

@@ -27,8 +27,7 @@ class _SingleGridItemState extends State<SingleGridItem> {
 
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, DetailScreen.routName,
-            arguments: {"cartModel": ite, "favouriteId": widget.value});
+        Navigator.pushNamed(context, DetailScreen.routName, arguments: ite);
       },
       child: Container(
           margin: const EdgeInsets.only(
@@ -69,10 +68,11 @@ class _SingleGridItemState extends State<SingleGridItem> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          if (kDebugMode) {
-                            print(ite.id);
-                          }
-                          ite.toggleFavourite(widget.value, prod.authToken);
+                          // if (kDebugMode) {
+                          //   print(ite.id);
+                          // }
+                          ite.toggleFavourite(
+                              ite.id, prod.authToken, prod.userId);
                         });
                       },
                       child: Padding(
