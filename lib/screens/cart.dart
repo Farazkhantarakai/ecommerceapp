@@ -1,8 +1,11 @@
 import 'package:ecommerce_app/models/cartmodel.dart';
+import 'package:ecommerce_app/models/order.dart';
 import 'package:ecommerce_app/providers/cartitem.dart';
 import 'package:ecommerce_app/widgets/single-cartitem.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../screens/check_out_screen.dart';
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -160,10 +163,22 @@ class _CartState extends State<Cart> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   const Color.fromARGB(255, 42, 74, 253)),
-                          onPressed: () {},
+                          onPressed: cartitem.getCartItem.isEmpty
+                              ? null
+                              : () {
+                                  if (kDebugMode) {
+                                    print(cartitem.getCartItem.values);
+                                  }
+                                  Navigator.pushNamed(
+                                      context, ItemOrderScreen.routName,
+                                      arguments: {
+                                        'total': total,
+                                        'cartItems': cartitem.getCartItem
+                                      });
+                                },
                           icon: const Icon(Icons.price_check),
                           label: const Text(
-                            'Check Out',
+                            'Add Order',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),

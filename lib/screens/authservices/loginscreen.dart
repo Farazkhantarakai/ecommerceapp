@@ -154,25 +154,27 @@ class _LogInScreenState extends State<LogInScreen> {
                                               )
                                             ],
                                           ),
-                                          TextFormField(
-                                            key: _key1,
-                                            controller: _emailController,
-                                            keyboardType:
-                                                TextInputType.emailAddress,
-                                            decoration: const InputDecoration(
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                        vertical: 2,
-                                                        horizontal: 2)),
-                                            validator: (value) {
-                                              if (value!.isEmpty) {
-                                                return 'email should not be empty';
-                                              } else if (!value
-                                                  .endsWith('@gmail.com')) {
-                                                return 'write @ gmail.com at the end ';
-                                              }
-                                              return null;
-                                            },
+                                          Expanded(
+                                            child: TextFormField(
+                                              key: _key1,
+                                              controller: _emailController,
+                                              keyboardType:
+                                                  TextInputType.emailAddress,
+                                              decoration: const InputDecoration(
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                          vertical: 2,
+                                                          horizontal: 2)),
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return 'email should not be empty';
+                                                } else if (!value
+                                                    .endsWith('@gmail.com')) {
+                                                  return 'write @ gmail.com at the end ';
+                                                }
+                                                return null;
+                                              },
+                                            ),
                                           )
                                         ],
                                       ),
@@ -200,49 +202,52 @@ class _LogInScreenState extends State<LogInScreen> {
                                               )
                                             ],
                                           ),
-                                          TextFormField(
-                                            // key: _key2,
-                                            controller: _passwordController,
-                                            obscureText: showCharacter,
-                                            decoration: InputDecoration(
-                                                suffixIcon: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      showCharacter =
-                                                          !showCharacter;
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    // width: 10,
-                                                    // height: 0,
-                                                    child: showCharacter
-                                                        ? const Text(
-                                                            'Show',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .blue),
-                                                          )
-                                                        : const Text(
-                                                            'Hide',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .blue),
-                                                          ),
+                                          Expanded(
+                                            child: TextFormField(
+                                              // key: _key2,
+                                              controller: _passwordController,
+                                              obscureText: showCharacter,
+                                              decoration: InputDecoration(
+                                                  suffixIcon: GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        showCharacter =
+                                                            !showCharacter;
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      // width: 10,
+                                                      // height: 0,
+                                                      child: showCharacter
+                                                          ? const Text(
+                                                              'Show',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .blue),
+                                                            )
+                                                          : const Text(
+                                                              'Hide',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .blue),
+                                                            ),
+                                                    ),
                                                   ),
-                                                ),
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 0,
-                                                        horizontal: 2),
-                                                fillColor: Colors.green),
-                                            validator: (value) {
-                                              if (value!.isEmpty) {
-                                                return 'value cannot be empty';
-                                              } else if (value.length < 6) {
-                                                return 'it should be more than 6 characters';
-                                              }
-                                              return null;
-                                            },
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 0,
+                                                          horizontal: 2),
+                                                  fillColor: Colors.green),
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return 'value cannot be empty';
+                                                } else if (value.length < 6) {
+                                                  return 'it should be more than 6 characters';
+                                                }
+                                                return null;
+                                              },
+                                            ),
                                           )
                                         ],
                                       ),

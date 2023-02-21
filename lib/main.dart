@@ -5,6 +5,7 @@ import 'package:ecommerce_app/providers/dummy_data.dart';
 import 'package:ecommerce_app/models/Product.dart';
 import 'package:ecommerce_app/providers/auth.dart';
 import 'package:ecommerce_app/providers/cartitem.dart';
+import 'package:ecommerce_app/providers/orders.dart';
 import 'package:ecommerce_app/screens/authservices/forgot_passwod.dart';
 import 'package:ecommerce_app/screens/authservices/loginscreen.dart';
 import 'package:ecommerce_app/screens/authservices/signupscreen.dart';
@@ -18,6 +19,7 @@ import 'package:ecommerce_app/screens/profile_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import './screens/check_out_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,7 +51,10 @@ class _MyAppState extends State<MyApp> {
               update: (context, auth, prev) =>
                   Products(auth.token, auth.userId)),
 
-          ChangeNotifierProvider.value(value: ProductModel())
+          ChangeNotifierProvider.value(value: ProductModel()),
+          ChangeNotifierProxyProvider<Auth, Orders>(
+              create: (context) => Orders('', ''),
+              update: (context, auth, pre) => Orders(auth.token, auth.userId))
         ],
         child: Consumer<Auth>(
           builder: (context, auth, child) {
@@ -79,7 +84,9 @@ class _MyAppState extends State<MyApp> {
                 DetailScreen.routName: (context) => const DetailScreen(),
                 SignUpScreen.routName: (context) => const SignUpScreen(),
                 LogInScreen.routName: (context) => const LogInScreen(),
-                ForgotPassword.routName: (context) => ForgotPassword()
+                ForgotPassword.routName: (context) => ForgotPassword(),
+                ItemOrderScreen.routName: (context) => const ItemOrderScreen(),
+                MyHomeApp.routName: (context) => const MyHomeApp()
               },
             );
           },
@@ -89,7 +96,7 @@ class _MyAppState extends State<MyApp> {
 
 class MyHomeApp extends StatefulWidget {
   const MyHomeApp({super.key});
-
+  static const routName = './homeApp';
   @override
   State<MyHomeApp> createState() => _MyHomeAppState();
 }

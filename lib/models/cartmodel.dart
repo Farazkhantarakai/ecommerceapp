@@ -22,11 +22,26 @@ class CartModel with ChangeNotifier {
 
   void changeChecked() {
     isChecked = !isChecked!;
+    notifyListeners();
   }
 
   void decreaseValue() {
     quantity = quantity! - 1;
     notifyListeners();
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'image': image,
+      'size': size,
+      'price': price,
+      'color': color,
+      'quantity': quantity,
+      'isChecked': isChecked,
+      'perOff': perOff
+    };
   }
 
   CartModel.fromJson(Map<String, dynamic> map) {
