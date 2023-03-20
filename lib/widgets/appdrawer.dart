@@ -1,6 +1,9 @@
+import 'package:ecommerce_app/providers/auth.dart';
 import 'package:ecommerce_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import './circlepainter.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -8,7 +11,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: orangeButton.withOpacity(0.7),
+      backgroundColor: Colors.blue,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -92,10 +95,21 @@ class AppDrawer extends StatelessWidget {
               width: double.infinity,
               height: 180,
               decoration: const BoxDecoration(),
+              child: Column(
+                children: [
+                  CustomPaint(
+                    painter: CirclePainter(radius1: 14, radius2: 8),
+                  ),
+                  Container(
+                    color: Colors.blueGrey[300],
+                    decoration: const BoxDecoration(shape: BoxShape.circle),
+                  )
+                ],
+              ),
             ),
             ListTile(
               onTap: () {
-                SystemNavigator.pop();
+                Provider.of<Auth>(context, listen: false).logOut();
               },
               leading: const Icon(
                 Icons.exit_to_app,

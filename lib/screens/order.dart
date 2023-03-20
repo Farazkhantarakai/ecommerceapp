@@ -1,8 +1,6 @@
 import 'package:ecommerce_app/providers/orders.dart';
 import 'package:ecommerce_app/screens/OrderItemScreen.dart';
-import 'package:ecommerce_app/screens/check_out_screen.dart';
 import 'package:ecommerce_app/utils/constants.dart';
-import 'package:ecommerce_app/widgets/noorder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,34 +21,41 @@ class OrderScreen extends StatelessWidget {
         style: TextStyle(color: Colors.black),
       ),
     );
-
     return Scaffold(
         backgroundColor: whiteColor,
         appBar: appBar,
         body: FutureBuilder(
             future: Provider.of<Orders>(context, listen: false)
                 .fetchAndSetProduct(),
-            builder: (context, snapshot) {
+            builder: (
+              context,
+              snapshot,
+            ) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.blue,
+                  ),
+                );
               } else {
                 if (kDebugMode) {
                   print('${snapshot.error}');
                 }
-
                 if (snapshot.error != null) {
-                  return const Text('Something went wrong ');
+                  return const Center(
+                    child: Text(
+                      'there is something went wrong',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  );
                 } else {
                   return Consumer<Orders>(
-                    builder: (context, order, child) {
+                    builder: (context, norder, child) {
                       return ListView.builder(
-                          itemCount: order.orderItem.length,
+                          itemCount: norder.orderItem.length,
                           itemBuilder: (context, index) {
-                            return Container(
-                              color: Colors.green,
-                            );
-                            // OrderItemScreen(
-                            //     item: order.orderItem[index]);
+                            return OrderItemScreen(
+                                item: norder.orderItem[index]);
                           });
                     },
                   );

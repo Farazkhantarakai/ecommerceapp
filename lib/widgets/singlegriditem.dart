@@ -1,10 +1,11 @@
 import 'package:ecommerce_app/models/Product.dart';
 import 'package:ecommerce_app/providers/dummy_data.dart';
 import 'package:ecommerce_app/screens/detailscreen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../widgets/imagebgclipper.dart';
 
+// ignore: must_be_immutable
 class SingleGridItem extends StatefulWidget {
   SingleGridItem({
     super.key,
@@ -17,6 +18,11 @@ class SingleGridItem extends StatefulWidget {
 
   @override
   State<SingleGridItem> createState() => _SingleGridItemState();
+}
+
+Color getColor(String color) {
+  Color newColor = Color(int.parse('ff${color.substring(1)}', radix: 16));
+  return newColor;
 }
 
 class _SingleGridItemState extends State<SingleGridItem> {
@@ -97,14 +103,24 @@ class _SingleGridItemState extends State<SingleGridItem> {
                     padding: const EdgeInsets.all(2.0),
                     child: Stack(
                       children: [
+                        Positioned(
+                          top: 50,
+                          left: 70,
+                          child: CustomPaint(
+                            painter: ImageBgPainter(
+                                newColor: getColor(ite.colors![0]),
+                                radius1: 65,
+                                radius2: 55),
+                          ),
+                        ),
                         Container(
                           padding: EdgeInsets.all(widget.ctx.maxHeight * 0.03),
                           decoration: const BoxDecoration(),
                           width: double.infinity,
-                          height: widget.ctx.maxHeight * 0.2,
+                          height: widget.ctx.maxHeight * 0.25,
                           child: Image.network(
                             ite.imageUrl![0],
-                            height: 50,
+                            height: 20,
                           ),
                         ),
                       ],

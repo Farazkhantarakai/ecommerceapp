@@ -50,7 +50,6 @@ class _MyAppState extends State<MyApp> {
               create: (context) => Products('', ''),
               update: (context, auth, prev) =>
                   Products(auth.token, auth.userId)),
-
           ChangeNotifierProvider.value(value: ProductModel()),
           ChangeNotifierProxyProvider<Auth, Orders>(
               create: (context) => Orders('', ''),

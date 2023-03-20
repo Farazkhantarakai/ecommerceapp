@@ -87,13 +87,13 @@ class Products extends ChangeNotifier {
 
   Future<void> fetchAndSet() async {
     data = [];
+    // ?auth=$authToken
     String url =
-        'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/Product.json?auth=$authToken';
+        'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/Product.json';
     try {
-      final response = await http
-          .get(Uri.parse(url))
-          .timeout(const Duration(milliseconds: 5000));
+      final response = await http.get(Uri.parse(url));
       final result = jsonDecode(response.body);
+
       if (result == null) {
         return;
       }
@@ -104,29 +104,47 @@ class Products extends ChangeNotifier {
       final favResponse = await http.get(
         Uri.parse(url),
       );
-      final favResult = jsonDecode(favResponse.body) as Map<String, dynamic>;
-      if (kDebugMode) {
-        print(favResult);
-      }
+
+      final favResult = jsonDecode(favResponse.body);
+      // ignore: unnecessary_null_comparison
+
       List<ProductModel> loadedProduct = [];
       if (response.statusCode == 200) {
-        result.forEach((item) {
-          final favorite = favResult[item['id'].toString()];
+        if (favResult == null) {
+          result.forEach((item) {
+            loadedProduct.add(ProductModel(
+                id: item['id'],
+                category: item['category'],
+                colors: item['colors'],
+                description: item['description'],
+                imageUrl: item['image_url'],
+                off: item['off'],
+                price: item['price'],
+                size: item['size'],
+                title: item['title'],
+                rating: item['rating'],
+                isFavourite: false));
+          });
+        } else {
+          result.forEach((item) {
+            final favorite = favResult[item['id'].toString()];
 
-          loadedProduct.add(ProductModel(
-              id: item['id'],
-              category: item['category'],
-              colors: item['colors'],
-              description: item['description'],
-              imageUrl: item['image_url'],
-              off: item['off'],
-              price: item['price'],
-              size: item['size'],
-              title: item['title'],
-              rating: item['rating'],
-              isFavourite:
-                  favorite == null ? false : favorite['isFavourite'] ?? false));
-        });
+            loadedProduct.add(ProductModel(
+                id: item['id'],
+                category: item['category'],
+                colors: item['colors'],
+                description: item['description'],
+                imageUrl: item['image_url'],
+                off: item['off'],
+                price: item['price'],
+                size: item['size'],
+                title: item['title'],
+                rating: item['rating'],
+                isFavourite: favorite == null
+                    ? false
+                    : favorite['isFavourite'] ?? false));
+          });
+        }
 
         data = loadedProduct;
       }

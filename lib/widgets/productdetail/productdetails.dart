@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/models/Product.dart';
 import 'package:ecommerce_app/models/cartmodel.dart';
 import 'package:ecommerce_app/providers/cartitem.dart';
+import 'package:ecommerce_app/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -52,14 +53,6 @@ class _ProductDetailState extends State<ProductDetail> {
             ));
   }
 
-  Color convertColor(String colorItem) {
-    Color color = Color(int.parse('ff${colorItem.substring(1)}', radix: 16));
-    if (kDebugMode) {
-      print('color $color');
-    }
-    return color;
-  }
-
   //List generate method will create exactly the same item of the length
   generateColor(length, List<dynamic>? colorItem) {
     return List.generate(
@@ -68,14 +61,14 @@ class _ProductDetailState extends State<ProductDetail> {
               onTap: () {
                 setState(() {
                   colorIndex = index;
-                  selectColor = convertColor(colorItem[index]);
+                  selectColor = ToColor.fromHex(colorItem[index]);
                 });
               },
               child: Container(
                 margin: const EdgeInsets.only(left: 10),
                 constraints: const BoxConstraints.expand(width: 34, height: 34),
                 decoration: BoxDecoration(
-                  color: convertColor(colorItem![index]),
+                  color: ToColor.fromHex(colorItem![index]),
                   shape: BoxShape.circle,
                 ),
                 child: colorIndex == index
@@ -95,6 +88,7 @@ class _ProductDetailState extends State<ProductDetail> {
     return LayoutBuilder(builder: (context, ctx) {
       return Stack(
         children: [
+          // product detail portion
           Align(
             alignment: Alignment.topCenter,
             child: Container(
@@ -166,6 +160,8 @@ class _ProductDetailState extends State<ProductDetail> {
                                   style: TextStyle(
                                       fontSize: 17, color: Colors.grey),
                                 ),
+
+                                //this will size boxes
                                 ...generatBox(
                                     widget.tak.size!.length, widget.tak.size)
                               ],
@@ -180,6 +176,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                 const Text('Available Colors:',
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.grey)),
+                                // this will create the color boxes
                                 ...generateColor(widget.tak.colors!.length,
                                     widget.tak.colors)
                               ],
@@ -193,6 +190,8 @@ class _ProductDetailState extends State<ProductDetail> {
               ),
             ),
           ),
+
+          // add to cart button portion
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -216,7 +215,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       InkWell(
                         onTap: () async {
                           Color firstColor =
-                              convertColor(widget.tak.colors![0]);
+                              ToColor.fromHex(widget.tak.colors![0]);
                           // print('id ${widget.tak.id}  title ${widget.tak.title}  imageurl ${widget.tak.imageUrl![0] } price ${widget.tak.price} size $size ');
                           CartModel cm = CartModel(
                               widget.tak.id,

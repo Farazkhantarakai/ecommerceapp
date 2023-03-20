@@ -1,6 +1,8 @@
 import 'package:ecommerce_app/models/cartmodel.dart';
 import 'package:ecommerce_app/providers/cartitem.dart';
+import 'package:ecommerce_app/shared.dart';
 import 'package:ecommerce_app/utils/utils.dart';
+import 'package:ecommerce_app/widgets/imagebgclipper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,10 +40,24 @@ class _SingleCartItemState extends State<SingleCartItem> {
                       width: 60,
                       height: double.infinity,
                       decoration: const BoxDecoration(),
-                      child: Center(
-                          child: Image.network(
-                        cartModel.image.toString(),
-                      ))),
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: CustomPaint(
+                              painter: ImageBgPainter(
+                                  newColor: ToColor.fromHex(
+                                      cartModel.color.toString()),
+                                  radius1: 40,
+                                  radius2: 35),
+                            ),
+                          ),
+                          Center(
+                              child: Image.network(
+                            cartModel.image.toString(),
+                          )),
+                        ],
+                      )),
                   Container(
                     width: 170,
                     height: double.infinity,

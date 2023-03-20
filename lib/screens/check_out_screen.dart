@@ -2,11 +2,14 @@ import 'package:ecommerce_app/main.dart';
 import 'package:ecommerce_app/models/cartmodel.dart';
 import 'package:ecommerce_app/models/httpexception.dart';
 import 'package:ecommerce_app/models/order.dart';
+import 'package:ecommerce_app/providers/cartitem.dart';
 import 'package:ecommerce_app/providers/orders.dart';
+import 'package:ecommerce_app/screens/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../utils/constants.dart';
+import 'package:pay/pay.dart';
 import 'package:uuid/uuid.dart';
 
 enum Order { cashondelivery, paynow }
@@ -38,6 +41,7 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
     var total = data['total'];
     final mdq = MediaQuery.of(context).size;
     var order = Provider.of<Orders>(context, listen: false);
+    final cart = Provider.of<CartItem>(context, listen: false);
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -134,7 +138,7 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
                                 maxLines: 5,
                                 decoration: const InputDecoration(
                                     hintText: 'Enter your Address'),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -225,5 +229,9 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
         ],
       ),
     );
+  }
+
+  void onGooglePayResult(paymentResult) {
+    // Send the resulting Google Pay token to your server / PSP
   }
 }

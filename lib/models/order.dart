@@ -1,5 +1,3 @@
-import 'package:ecommerce_app/models/cartmodel.dart';
-
 enum Status {
   cancelled,
   pending,

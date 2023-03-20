@@ -5,6 +5,7 @@ import 'package:ecommerce_app/screens/authservices/loginscreen.dart';
 import 'package:ecommerce_app/utils/utils.dart';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -34,7 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ? const Center(
                   child: CircularProgressIndicator(
                     color: Colors.white,
-                    strokeWidth: 30,
+                    // strokeWidth: 30,
                   ),
                 )
               : Column(children: [
@@ -176,14 +177,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       isloading = true;
                                     });
                                     try {
-                                      await auth
+                                      auth
                                           .signUpUser(_emailController.text,
                                               _passwordController.text)
-                                          .then(() {
+                                          .then((value) {
                                         setState(() {
                                           isloading = false;
                                         });
                                       });
+                                      Fluttertoast.showToast(
+                                          msg: 'Email Registered Succefully');
                                     } on HttpException catch (err) {
                                       if (err.message.contains('EMAIL_EXIST')) {
                                         showToast(

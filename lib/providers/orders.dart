@@ -1,20 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:ecommerce_app/models/cartmodel.dart';
 import 'package:ecommerce_app/models/httpexception.dart';
 import 'package:ecommerce_app/models/order.dart';
-import 'package:ecommerce_app/screens/check_out_screen.dart';
-import 'package:ecommerce_app/utils/constants.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class Orders extends ChangeNotifier {
-  List<OrderItem> _orderItems = [];
+  List<OrderItem> orderItems = [];
   String? tokenId;
   String? userId;
   Orders(this.tokenId, this.userId);
-  List<OrderItem> get orderItem => _orderItems;
+  List<OrderItem> get orderItem => orderItems;
 
   Future<String> addOrderItem(
       {required String amounts,
@@ -68,12 +64,20 @@ class Orders extends ChangeNotifier {
       List<OrderItem> loadedProduct = [];
       final extractedData = jsonDecode(response.body) as Map<String, dynamic>;
 
+      // ignore: unnecessary_null_comparison
       if (extractedData == null) {
         return;
       }
 
-      extractedData.forEach((productId, productData) {
-        if (productData['products'] != null) {
+      if (extractedData['error'] != null) {
+        if (kDebugMode) {
+          print('error message is printed');
+        }
+        notifyListeners();
+      }
+
+      if (response.statusCode == 200) {
+        extractedData.forEach((productId, productData) {
           loadedProduct.add(OrderItem(
               id: productId,
               amounts: productData['amount'],
@@ -84,12 +88,9 @@ class Orders extends ChangeNotifier {
               name: productData['name'],
               status: productData['status'],
               products: productData['products']));
-        }
-      });
-
-      _orderItems = loadedProduct;
-
-      notifyListeners();
+        });
+        orderItems = loadedProduct;
+      }
     } catch (err) {
       throw HttpException(err.toString());
     }

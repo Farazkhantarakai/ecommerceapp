@@ -48,25 +48,27 @@ class _CartState extends State<Cart> {
                 )
               : Container(),
           actions: [
-            IconButton(
-                onPressed: () async {
-                  setState(() {
-                    isLoading = true;
-                  });
+            cartitem.isLongPress
+                ? IconButton(
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
 
-                  await cartitem.doDeleteItems();
-                  cartitem.changeLongPress();
-                  cartitem.fetchCartItem().then((v) {
-                    setState(() {
-                      isLoading = false;
-                    });
-                  });
-                },
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.grey,
-                  size: 25,
-                ))
+                      await cartitem.doDeleteItems();
+                      cartitem.changeLongPress();
+                      cartitem.fetchCartItem().then((v) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.grey,
+                      size: 25,
+                    ))
+                : Container()
           ],
           centerTitle: true,
           title: const Text(
@@ -89,20 +91,31 @@ class _CartState extends State<Cart> {
                   width: double.infinity,
                   height: mdq.height * 0.57,
                   decoration: const BoxDecoration(),
-                  child: ListView.builder(
-                      itemCount: cartitem.getCartItem.length,
-                      itemBuilder: (context, index) {
-                        return ChangeNotifierProvider<CartModel>.value(
-                          //in this way we have to take single item from a map
-                          value: cartitem.getCartItem.values.toList()[index],
-                          builder: ((context, child) {
-                            return SingleCartItem(
-                                //i am passing the of that particular element as well
-                                itemKey:
-                                    cartitem.getCartItem.keys.toList()[index]);
+                  child: cartitem.getCartItem.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No item added yet',
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: cartitem.getCartItem.length,
+                          itemBuilder: (context, index) {
+                            return ChangeNotifierProvider<CartModel>.value(
+                              //in this way we have to take single item from a map
+                              value:
+                                  cartitem.getCartItem.values.toList()[index],
+                              builder: ((context, child) {
+                                return SingleCartItem(
+                                    //i am passing the of that particular element as well
+                                    itemKey: cartitem.getCartItem.keys
+                                        .toList()[index]);
+                              }),
+                            );
                           }),
-                        );
-                      }),
                 ),
 // Check out add button and total
                 Container(

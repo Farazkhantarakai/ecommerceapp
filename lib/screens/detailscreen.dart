@@ -1,7 +1,7 @@
 import 'package:ecommerce_app/providers/dummy_data.dart';
 import 'package:ecommerce_app/models/Product.dart';
-import 'package:ecommerce_app/widgets/carousolcontainer.dart';
-import 'package:ecommerce_app/widgets/productdetails.dart';
+import 'package:ecommerce_app/widgets/productdetail/carousolcontainer.dart';
+import 'package:ecommerce_app/widgets/productdetail/productdetails.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

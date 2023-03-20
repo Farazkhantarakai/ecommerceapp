@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce_app/models/Product.dart';
+import 'package:ecommerce_app/shared.dart';
+import 'package:ecommerce_app/widgets/productdetail/carousolbackground.dart';
 import 'package:flutter/material.dart';
 
 class CarousolContainer extends StatefulWidget {
@@ -9,6 +11,11 @@ class CarousolContainer extends StatefulWidget {
   @override
   State<CarousolContainer> createState() => _CarousolContainerState();
 }
+
+// converColor(String newColor) {
+//   Color tColor = Color(int.parse('ff ${newColor.substring(1)}', radix: 16));
+//   return tColor;
+// }
 
 class _CarousolContainerState extends State<CarousolContainer> {
   int cindex = 0;
@@ -69,24 +76,48 @@ class _CarousolContainerState extends State<CarousolContainer> {
                 margin: const EdgeInsets.only(top: 10),
                 constraints: BoxConstraints.expand(
                     width: double.infinity, height: ctx.maxHeight * 0.7),
-                child: CarouselSlider(
-                    items: widget.tak.imageUrl!
-                        .map((e) => Image.network(
-                              e.toString(),
-                              fit: BoxFit.contain,
-                            ))
-                        .toList(),
-                    options: CarouselOptions(
-                        height: 150,
-                        autoPlay: false,
-                        autoPlayInterval: const Duration(seconds: 1),
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            cindex = index;
-                          });
-                        },
-                        initialPage: 0,
-                        viewportFraction: 1)),
+                child: Column(
+                  children: [
+                    CarouselSlider(
+                        items: [
+                          ...widget.tak.imageUrl!
+                              .map((
+                                e,
+                              ) =>
+                                  Stack(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: CustomPaint(
+                                          painter: CarousolBackground(
+                                              backgroundColor: ToColor.fromHex(
+                                                  widget.tak.colors![cindex])),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: Image.network(
+                                          e.toString(),
+                                          width: 150,
+                                        ),
+                                      )
+                                    ],
+                                  ))
+                              .toList()
+                        ],
+                        options: CarouselOptions(
+                            height: 185,
+                            autoPlay: true,
+                            autoPlayInterval: const Duration(seconds: 3),
+                            onPageChanged: (index, reason) {
+                              setState(() {
+                                cindex = index;
+                              });
+                            },
+                            initialPage: 0,
+                            viewportFraction: 1)),
+                  ],
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
