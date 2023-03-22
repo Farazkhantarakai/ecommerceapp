@@ -97,12 +97,14 @@ class AppDrawer extends StatelessWidget {
               decoration: const BoxDecoration(),
               child: Column(
                 children: [
-                  CustomPaint(
-                    painter: CirclePainter(radius1: 14, radius2: 8),
-                  ),
+                  // CustomPaint(
+                  //   painter: CirclePainter(radius1: 14, radius2: 8),
+                  // ),
                   Container(
-                    color: Colors.blueGrey[300],
-                    decoration: const BoxDecoration(shape: BoxShape.circle),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blueGrey[300],
+                    ),
                   )
                 ],
               ),

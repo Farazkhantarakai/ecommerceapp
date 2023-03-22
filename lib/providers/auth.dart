@@ -87,7 +87,11 @@ class Auth extends ChangeNotifier {
     }
   }
 
-  signUpUser(String email, String password) {
+  signUpUser(String email, String password) async {
+    String url =
+        'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/userprofile';
+    final response = await http.post(Uri.parse(url));
+    print(response);
     return authenticate(email, password, 'signUp');
   }
 

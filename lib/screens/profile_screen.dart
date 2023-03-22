@@ -17,9 +17,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final mdq = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 235, 234, 234),
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 235, 234, 234),
         title: const Text(
           'Profile',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -97,41 +98,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   }),
             ],
           ),
-          Container(
-            width: mdq.width * 0.7,
-            height: mdq.height * 0.07,
-            margin: EdgeInsets.only(top: mdq.height * 0.04),
-            decoration: const BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            child: const Center(
-              child: Text(
-                'Update Info',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Provider.of<Auth>(context).logOut();
-            },
-            child: Container(
-              width: mdq.width * 0.7,
-              height: mdq.height * 0.07,
-              margin: EdgeInsets.only(top: mdq.height * 0.03),
-              decoration: const BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: const Center(
-                child: Text(
-                  'Log Out',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          )
+          // Container(
+          //   width: mdq.width * 0.7,
+          //   height: mdq.height * 0.07,
+          //   margin: EdgeInsets.only(top: mdq.height * 0.04),
+          //   decoration: const BoxDecoration(
+          //       color: Colors.blue,
+          //       borderRadius: BorderRadius.all(Radius.circular(10))),
+          //   child: const Center(
+          //     child: Text(
+          //       'Update Info',
+          //       style:
+          //           TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          //     ),
+          //   ),
+          // ),
+          // GestureDetector(
+          //   onTap: () {
+          //     Provider.of<Auth>(context).logOut();
+          //   },
+          //   child: Container(
+          //     width: mdq.width * 0.7,
+          //     height: mdq.height * 0.07,
+          //     margin: EdgeInsets.only(top: mdq.height * 0.03),
+          //     decoration: const BoxDecoration(
+          //         color: Colors.blue,
+          //         borderRadius: BorderRadius.all(Radius.circular(10))),
+          //     child: const Center(
+          //       child: Text(
+          //         'Log Out',
+          //         style: TextStyle(
+          //             color: Colors.white, fontWeight: FontWeight.bold),
+          //       ),
+          //     ),
+          //   ),
+          // )
         ],
       ),
     );

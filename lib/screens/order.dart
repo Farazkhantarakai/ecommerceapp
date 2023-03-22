@@ -13,16 +13,16 @@ class OrderScreen extends StatelessWidget {
     final mdq = MediaQuery.of(context).size;
     final order = Provider.of<Orders>(context).orderItem;
     final appBar = AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 235, 234, 234),
       centerTitle: true,
-      elevation: 0,
+      elevation: 1,
       title: const Text(
         'Order History',
         style: TextStyle(color: Colors.black),
       ),
     );
     return Scaffold(
-        backgroundColor: whiteColor,
+        backgroundColor: const Color.fromARGB(255, 235, 234, 234),
         appBar: appBar,
         body: FutureBuilder(
             future: Provider.of<Orders>(context, listen: false)
@@ -34,7 +34,7 @@ class OrderScreen extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                   child: CircularProgressIndicator(
-                    color: Colors.blue,
+                    color: Colors.black,
                   ),
                 );
               } else {

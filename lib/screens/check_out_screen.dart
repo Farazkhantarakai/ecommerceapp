@@ -4,12 +4,10 @@ import 'package:ecommerce_app/models/httpexception.dart';
 import 'package:ecommerce_app/models/order.dart';
 import 'package:ecommerce_app/providers/cartitem.dart';
 import 'package:ecommerce_app/providers/orders.dart';
-import 'package:ecommerce_app/screens/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../utils/constants.dart';
-import 'package:pay/pay.dart';
 import 'package:uuid/uuid.dart';
 
 enum Order { cashondelivery, paynow }
@@ -43,7 +41,7 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
     var order = Provider.of<Orders>(context, listen: false);
     final cart = Provider.of<CartItem>(context, listen: false);
     return Scaffold(
-      backgroundColor: whiteColor,
+      backgroundColor: const Color.fromARGB(255, 235, 234, 234),
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
@@ -53,12 +51,12 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
               Icons.arrow_back,
               color: Colors.black,
             )),
-        backgroundColor: whiteColor,
+        backgroundColor: const Color.fromARGB(255, 235, 234, 234),
         title: const Text(
           'Add Order',
           style: TextStyle(color: Colors.black),
         ),
-        elevation: 0,
+        elevation: 1,
       ),
       body: Stack(
         children: [

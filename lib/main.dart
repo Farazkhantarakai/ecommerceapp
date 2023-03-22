@@ -18,6 +18,7 @@ import 'package:ecommerce_app/screens/home_screen.dart';
 import 'package:ecommerce_app/screens/profile_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import './screens/check_out_screen.dart';
 
@@ -38,14 +39,9 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: Auth()),
-
-          // ChangeNotifierProxyProvider<Auth,CartItem>(creat , update: ()),
           ChangeNotifierProxyProvider<Auth, CartItem>(
               create: (_) => CartItem('', {}),
               update: (_, auth, pre) => CartItem(auth.token, pre!.getCartItem)),
-          // ChangeNotifierProvider.value(
-          //   value: CartItem(),
-          // ),
           ChangeNotifierProxyProvider<Auth, Products>(
               create: (context) => Products('', ''),
               update: (context, auth, prev) =>
@@ -61,9 +57,9 @@ class _MyAppState extends State<MyApp> {
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                   appBarTheme: const AppBarTheme(
-                iconTheme: IconThemeData(color: Colors.white),
-                // systemOverlayStyle: SystemUiOverlayStyle()
-              )),
+                      iconTheme: IconThemeData(color: Colors.white),
+                      systemOverlayStyle: SystemUiOverlayStyle(
+                          statusBarIconBrightness: Brightness.light))),
               home: auth.isAuth
                   ? const MyHomeApp()
                   : FutureBuilder(

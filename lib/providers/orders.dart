@@ -95,4 +95,16 @@ class Orders extends ChangeNotifier {
       throw HttpException(err.toString());
     }
   }
+
+  deletOrder(String orderId) async {
+    print('item deleted');
+    final response = await http.delete(Uri.parse(
+        'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/orders/$orderId.json?auth=$tokenId'));
+
+    if (kDebugMode) {
+      print(response.body);
+    }
+
+    notifyListeners();
+  }
 }
