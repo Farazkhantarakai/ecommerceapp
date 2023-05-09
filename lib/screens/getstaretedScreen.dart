@@ -1,5 +1,4 @@
 import 'package:ecommerce_app/screens/authservices/loginscreen.dart';
-import 'package:ecommerce_app/shared.dart';
 import 'package:flutter/material.dart';
 
 class GetStartedScreen extends StatelessWidget {

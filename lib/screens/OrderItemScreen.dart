@@ -1,10 +1,7 @@
 import 'dart:math';
 import 'package:ecommerce_app/models/cartmodel.dart';
 import 'package:ecommerce_app/models/order.dart';
-import 'package:ecommerce_app/providers/auth.dart';
-import 'package:ecommerce_app/providers/cartitem.dart';
 import 'package:ecommerce_app/providers/orders.dart';
-import 'package:ecommerce_app/screens/check_out_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +10,8 @@ class OrderItemScreen extends StatefulWidget {
   const OrderItemScreen({super.key, required this.item});
 
   final OrderItem item;
+
+  static const routName = 'orderItem';
 
   @override
   State<OrderItemScreen> createState() => _OrderItemScreenState();
@@ -30,7 +29,7 @@ class _OrderItemScreenState extends State<OrderItemScreen> {
     final dt = DateFormat('yMMMd').format(dateTime);
     final orderList = Provider.of<Orders>(context, listen: true);
 
-    final productList = widget.item.products!.entries.map((entry) {
+    List<CartModel> productList = widget.item.products!.entries.map((entry) {
       final value = entry.value;
       return CartModel(
           value['id'],
@@ -52,7 +51,7 @@ class _OrderItemScreenState extends State<OrderItemScreen> {
                 child: IconButton(
                     onPressed: () {
                       setState(() {
-                        orderList.deletOrder(widget.item.id.toString());
+                        // orderList.deletOrder(widget.item.id.toString());
                       });
                     },
                     icon: const Icon(
@@ -62,7 +61,11 @@ class _OrderItemScreenState extends State<OrderItemScreen> {
           ],
         ),
       ),
-      onDismissed: (direction) {},
+      onDismissed: (direction) {
+        debugPrint('dismissible delete item ${widget.item.id.toString()}');
+        Provider.of<Orders>(context, listen: false)
+            .deletOrder(widget.item.id.toString());
+      },
       key: ValueKey(widget.item.id),
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 10),

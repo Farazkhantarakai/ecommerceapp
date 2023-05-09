@@ -1,5 +1,5 @@
+import 'package:ecommerce_app/models/CartD.dart';
 import 'package:ecommerce_app/models/cartmodel.dart';
-import 'package:ecommerce_app/models/order.dart';
 import 'package:ecommerce_app/providers/cartitem.dart';
 import 'package:ecommerce_app/widgets/single-cartitem.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +18,7 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   bool? isLoading = false;
+  List<Cartd> items = [];
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +111,6 @@ class _CartState extends State<Cart> {
                                   cartitem.getCartItem.values.toList()[index],
                               builder: ((context, child) {
                                 return SingleCartItem(
-                                    //i am passing the of that particular element as well
                                     itemKey: cartitem.getCartItem.keys
                                         .toList()[index]);
                               }),
@@ -179,14 +179,24 @@ class _CartState extends State<Cart> {
                           onPressed: cartitem.getCartItem.isEmpty
                               ? null
                               : () {
+                                  items = [];
                                   if (kDebugMode) {
                                     print(cartitem.getCartItem.values);
                                   }
+
+                                  items.addAll(cartitem.getCartItem.values.map(
+                                      (e) => Cartd(
+                                          id: e.id!,
+                                          imageUrl: e.image.toString())));
+                                  debugPrint(
+                                      'items in the list ${items.length.toString()}');
+
                                   Navigator.pushNamed(
                                       context, ItemOrderScreen.routName,
                                       arguments: {
-                                        'total': total,
-                                        'cartItems': cartitem.getCartItem
+                                        'total': total + tax,
+                                        'cartItems': cartitem.getCartItem,
+                                        'item': items
                                       });
                                 },
                           icon: const Icon(Icons.price_check),

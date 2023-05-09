@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:ecommerce_app/main.dart';
+import 'package:ecommerce_app/models/CartD.dart';
 import 'package:ecommerce_app/models/cartmodel.dart';
 import 'package:ecommerce_app/models/httpexception.dart';
 import 'package:ecommerce_app/models/order.dart';
 import 'package:ecommerce_app/providers/cartitem.dart';
 import 'package:ecommerce_app/providers/orders.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../utils/constants.dart';
+import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
 enum Order { cashondelivery, paynow }
@@ -29,7 +34,56 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  var _form = GlobalKey<FormState>();
+  final _form = GlobalKey<FormState>();
+
+  bool _ready = false;
+
+  Map<String, dynamic>? paymentIntentData;
+
+  Future<void> intpayment(
+      {required String email,
+      required double amount,
+      required List<Cartd> item}) async {
+    try {
+      final response = await http
+          .post(Uri.parse("https://api.stripe.com/v1/payment_intents"), body: {
+        "receipt_email": email,
+        "amount": amount.toInt().toString(),
+        "currency": "usd"
+      }, headers: {
+        'Authorization': 'Bearer '
+            'sk_test_51N1SG5HWB5SDvH3syHrIesOj0zNqHDKsYRo1Dr7JKW2NXIrtJ7SQJnWjOVYntDuhdxWutxguDkK2WJH7mweZgU5Z00zo2wdygM',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      });
+
+      final jsonresponse = jsonDecode(response.body);
+      String clientSecret = jsonresponse['client_secret'];
+
+      await Stripe.instance.initPaymentSheet(
+          paymentSheetParameters: SetupPaymentSheetParameters(
+        paymentIntentClientSecret: clientSecret,
+        merchantDisplayName: 'Faraz khan',
+      ));
+
+      await Stripe.instance.presentPaymentSheet();
+
+      Fluttertoast.showToast(
+        msg: "You Added payment successfully and the order is on the way now ",
+      );
+    } catch (e) {
+      if (e is StripeException) {
+        Fluttertoast.showToast(
+          msg: "Stripe error $e",
+        );
+
+        debugPrint(e.toString());
+      }
+      Fluttertoast.showToast(
+        msg: "Payment cancelled",
+        toastLength: Toast.LENGTH_SHORT,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +94,8 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
     final mdq = MediaQuery.of(context).size;
     var order = Provider.of<Orders>(context, listen: false);
     final cart = Provider.of<CartItem>(context, listen: false);
+    List<Cartd> items = data['item'] as List<Cartd>;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 235, 234, 234),
       appBar: AppBar(
@@ -65,12 +121,38 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
             child: Container(
               width: double.infinity,
               height: double.infinity,
+              padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(),
               child: ListView(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8.0, left: 12),
-                    child: Text('Select your payment method: '),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        'Total Items:   ${cartItem.length}',
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Total Price:  $total',
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: mdq.height * 0.02,
+                  ),
+                  const Text(
+                    'Select your payment method: ',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
                   ),
                   RadioListTile<Order>(
                       value: Order.paynow,
@@ -140,7 +222,22 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
                             ],
                           ),
                         ),
-                      ))
+                      )),
+                  Container(
+                    width: double.infinity,
+                    height: 100,
+                    margin: const EdgeInsets.only(left: 10, top: 10),
+                    decoration: const BoxDecoration(),
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          return Image.network(
+                            items[index].imageUrl,
+                            colorBlendMode: BlendMode.darken,
+                          );
+                        }),
+                  )
                 ],
               ),
             ),
@@ -151,27 +248,14 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
               onTap: () async {
                 if (_form.currentState!.validate()) {
                   if (_order == Order.paynow) {
-                    // OrderItem item = OrderItem(
-                    //       id: const Uuid().v4().toString(),
-                    //       amounts: total.toString(),
-                    //       dateTime: DateTime.now().millisecondsSinceEpoch,
-                    //       products: cartItem,
-                    //       status: OrderItem.statusToString(Status.completed),
-                    //       name: _nameController.text.toString(),
-                    //       address: _addressController.text.toString(),
-                    //       email: _emailController.text.toString());
+                    await intpayment(
+                        email: _emailController.text.toString().trim(),
+                        amount: total,
+                        item: items);
+
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
                   } else {
-                    // OrderItem item = OrderItem(
-                    // id: const Uuid().v4().toString(),
-                    // amounts: total.toString(),
-                    // dateTime: DateTime.now().millisecondsSinceEpoch,
-                    // products: cartItem,
-                    // status: OrderItem.statusToString(Status.completed),
-                    // name: _nameController.text.toString(),
-                    // address: _addressController.text.toString(),
-                    // email: _emailController.text.toString(),
-                    // paymentMethod: 'Cash On Delivery'
-                    // );
                     try {
                       var result = await order.addOrderItem(
                           id: const Uuid().v4().toString(),
@@ -188,7 +272,8 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
                             msg: 'Your item is onthe way',
                             backgroundColor: Colors.blue);
                         // ignore: use_build_context_synchronously
-                        Navigator.pushNamed(context, MyHomeApp.routName);
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, MyHomeApp.routName, (route) => false);
                       }
                     } on HttpException catch (err) {
                       Fluttertoast.showToast(
@@ -227,9 +312,5 @@ class _ItemOrderScreenState extends State<ItemOrderScreen> {
         ],
       ),
     );
-  }
-
-  void onGooglePayResult(paymentResult) {
-    // Send the resulting Google Pay token to your server / PSP
   }
 }

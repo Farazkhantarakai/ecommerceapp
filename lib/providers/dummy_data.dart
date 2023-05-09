@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:ecommerce_app/models/Product.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,6 +11,7 @@ class Products extends ChangeNotifier {
   List<ProductModel> cData = [];
   List<ProductModel> mdata = [];
   String sortItem = '';
+  String searchItem = '';
 
   String authToken;
   String userId;
@@ -22,10 +22,16 @@ class Products extends ChangeNotifier {
     notifyListeners();
   }
 
+// this will set the searching value for the text fields in flutter
+  setSearchingValue(String searchingData) {
+    searchItem = searchingData;
+    debugPrint('search $searchItem');
+    notifyListeners();
+  }
+
   List<ProductModel> get getProducts {
     if (!isClicked) {
       // if isClicked is false
-
       if (sortItem == 'title') {
         data.sort(((a, b) => a.title!.length.compareTo(b.title!.length)));
         return data;
@@ -37,24 +43,49 @@ class Products extends ChangeNotifier {
           return a.price!.compareTo(b.price!);
         });
         notifyListeners();
-        return data;
+        return searchItem.isEmpty
+            ? data
+            : data
+                .where((element) =>
+                    element.title.toString().toLowerCase().contains(searchItem))
+                .toList();
       }
 
-      return data;
+      return searchItem.isEmpty
+          ? data
+          : data
+              .where((element) =>
+                  element.title.toString().toLowerCase().contains(searchItem))
+              .toList();
     } else {
       // if isClicked is true
       if (sortItem == 'title') {
         mdata.sort(((a, b) => a.title!.length.compareTo(b.title!.length)));
-        return mdata;
+        return searchItem.isEmpty
+            ? mdata
+            : mdata
+                .where((element) =>
+                    element.title.toString().toLowerCase().contains(searchItem))
+                .toList();
       } else if (sortItem == 'price') {
         mdata.sort((a, b) {
           return a.price!.compareTo(b.price!);
         });
         notifyListeners();
-        return mdata;
+        return searchItem.isEmpty
+            ? mdata
+            : mdata
+                .where((element) =>
+                    element.title.toString().toLowerCase().contains(searchItem))
+                .toList();
       }
 
-      return mdata;
+      return searchItem.isEmpty
+          ? mdata
+          : mdata
+              .where((element) =>
+                  element.title.toString().toLowerCase().contains(searchItem))
+              .toList();
     }
   }
 

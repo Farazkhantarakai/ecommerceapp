@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:ecommerce_app/models/httpexception.dart';
 import 'package:ecommerce_app/utils/constants.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,8 +31,9 @@ class Auth extends ChangeNotifier {
     return _userId;
   }
 
-  Future<void> authenticate(
-      String email, String password, String urlSegment) async {
+  // default parameter
+  Future<void> authenticate(String email, String password, String urlSegment,
+      [name]) async {
     String url =
         'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyA0RugQmmuyVMaBcRb4gtun_zhasblGrKc';
     try {
@@ -49,6 +49,18 @@ class Auth extends ChangeNotifier {
         if (result['error'] != null) {
           throw HttpException(result['error']['message']);
         }
+
+        // String url2 =
+        //     'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/userprofile/${result['localId']}.json}';
+        // final respons2 = await http.post(
+        //     Uri.parse(
+        //       url,
+        //     ),
+        //     body: jsonEncode({'Name': name, 'Email': email}));
+        // if (kDebugMode) {
+        //   print(response);
+        // }
+
         _tokenId = result['idToken'];
         _expireDate = DateTime.now()
             .add(Duration(seconds: int.parse(result['expiresIn'])));
@@ -77,22 +89,18 @@ class Auth extends ChangeNotifier {
             body: {"oobCode": "PASSWORD_RESET_CODE", "newPassword": email});
         final result = jsonDecode(response.body);
         if (response.statusCode >= 400) {
-          print(result['error']);
+          debugPrint(result['error']);
         }
       } catch (err) {
-        print(err);
+        debugPrint(err.toString());
         throw HttpException(err.toString());
       }
       notifyListeners();
     }
   }
 
-  signUpUser(String email, String password) async {
-    String url =
-        'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/userprofile';
-    final response = await http.post(Uri.parse(url));
-    print(response);
-    return authenticate(email, password, 'signUp');
+  signUpUser(String email, String password, String name) async {
+    return authenticate(email, password, 'signUp', name);
   }
 
   logInUser(String email, String password) {

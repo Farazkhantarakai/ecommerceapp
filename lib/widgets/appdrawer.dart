@@ -1,9 +1,9 @@
 import 'package:ecommerce_app/providers/auth.dart';
+import 'package:ecommerce_app/screens/OrderItemScreen.dart';
+import 'package:ecommerce_app/screens/order.dart';
 import 'package:ecommerce_app/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import './circlepainter.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -15,81 +15,61 @@ class AppDrawer extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ListTile(
-              onTap: () {},
-              leading: const Icon(
-                Icons.person,
-                color: whiteColor,
-              ),
-              title: const Text(
-                'Profile',
-                style: TextStyle(color: whiteColor, fontSize: 17),
-              ),
-            ),
-            Container(
-              height: 20,
-              margin: const EdgeInsets.only(left: 60, right: 10),
-              child: const Divider(color: whiteColor, height: 1),
-            ),
-            ListTile(
-              onTap: () {},
-              leading: const Icon(
-                Icons.shopping_cart,
-                color: whiteColor,
-              ),
-              title: const Text(
-                'My Orders',
-                style: TextStyle(color: whiteColor, fontSize: 17),
-              ),
-            ),
-            Container(
-              height: 20,
-              margin: const EdgeInsets.only(left: 60, right: 10),
-              child: const Divider(color: whiteColor, height: 1),
-            ),
-            ListTile(
-              onTap: () {},
-              leading: const Icon(
-                Icons.favorite,
-                color: whiteColor,
-              ),
-              title: const Text(
-                'Favourites',
-                style: TextStyle(color: whiteColor, fontSize: 17),
-              ),
-            ),
-            Container(
-              height: 20,
-              margin: const EdgeInsets.only(left: 60, right: 10),
-              child: const Divider(color: whiteColor, height: 1),
-            ),
-            ListTile(
-              onTap: () {},
-              leading: const Icon(
-                Icons.shop_sharp,
-                color: whiteColor,
-              ),
-              title: const Text(
-                'Delivery',
-                style: TextStyle(color: whiteColor, fontSize: 17),
-              ),
-            ),
-            Container(
-              height: 20,
-              margin: const EdgeInsets.only(left: 60, right: 10),
-              child: const Divider(color: whiteColor, height: 1),
-            ),
-            ListTile(
-              onTap: () {},
-              leading: const Icon(
-                Icons.settings,
-                color: whiteColor,
-              ),
-              title: const Text(
-                'Settings',
-                style: TextStyle(color: whiteColor, fontSize: 17),
-              ),
+            Column(
+              children: [
+                ListTile(
+                  onTap: () {},
+                  leading: const Icon(
+                    Icons.person,
+                    color: whiteColor,
+                  ),
+                  title: const Text(
+                    'Profile',
+                    style: TextStyle(color: whiteColor, fontSize: 17),
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  margin: const EdgeInsets.only(left: 60, right: 10),
+                  child: const Divider(color: whiteColor, height: 1),
+                ),
+                ListTile(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(OrderScreen.routName);
+                  },
+                  leading: const Icon(
+                    Icons.shopping_cart,
+                    color: whiteColor,
+                  ),
+                  title: const Text(
+                    'My Orders',
+                    style: TextStyle(color: whiteColor, fontSize: 17),
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  margin: const EdgeInsets.only(left: 60, right: 10),
+                  child: const Divider(color: whiteColor, height: 1),
+                ),
+                ListTile(
+                  onTap: () {},
+                  leading: const Icon(
+                    Icons.favorite,
+                    color: whiteColor,
+                  ),
+                  title: const Text(
+                    'Favourites',
+                    style: TextStyle(color: whiteColor, fontSize: 17),
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  margin: const EdgeInsets.only(left: 60, right: 10),
+                  child: const Divider(color: whiteColor, height: 1),
+                ),
+              ],
             ),
             Container(
               width: double.infinity,

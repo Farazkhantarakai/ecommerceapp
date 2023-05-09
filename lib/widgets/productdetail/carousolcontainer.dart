@@ -88,14 +88,6 @@ class _CarousolContainerState extends State<CarousolContainer> {
                                     children: [
                                       Align(
                                         alignment: Alignment.center,
-                                        child: CustomPaint(
-                                          painter: CarousolBackground(
-                                              backgroundColor: ToColor.fromHex(
-                                                  widget.tak.colors![cindex])),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.center,
                                         child: Image.network(
                                           e.toString(),
                                           width: 150,

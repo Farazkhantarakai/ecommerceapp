@@ -4,6 +4,7 @@ import 'package:ecommerce_app/providers/dummy_data.dart';
 import 'package:ecommerce_app/screens/detailscreen.dart';
 import 'package:ecommerce_app/widgets/imagebgclipper.dart';
 import 'package:ecommerce_app/widgets/singlegriditem.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +77,9 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       childAspectRatio: 0.7,
                     ),
                     itemBuilder: (context, index) {
-                      print(favProducts[index].imageUrl![0]);
+                      if (kDebugMode) {
+                        print(favProducts[index].imageUrl![0]);
+                      }
 
                       return ChangeNotifierProvider.value(
                         value: favProducts[index],
@@ -91,7 +94,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                                 right: 4,
                                 top: 2,
                               ),
-                              padding: const EdgeInsets.all(4.0),
+                              padding: const EdgeInsets.all(2.0),
                               constraints: const BoxConstraints.expand(),
                               decoration: const BoxDecoration(
                                   color: Colors.white,
@@ -131,9 +134,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              // if (kDebugMode) {
-                                              //   print(ite.id);
-                                              // }
                                               favProducts[index]
                                                   .toggleFavourite(
                                                       favProducts[index].id,
@@ -182,10 +182,13 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                                                   const EdgeInsets.all(0.03),
                                               decoration: const BoxDecoration(),
                                               width: double.infinity,
-                                              height: 0.25,
-                                              child: Image.network(
-                                                favProducts[index].imageUrl![0],
-                                                height: 50,
+                                              height: 100,
+                                              child: Center(
+                                                child: Image.network(
+                                                  favProducts[index]
+                                                      .imageUrl![0],
+                                                  height: 50,
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -226,122 +229,3 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
     );
   }
 }
-
-
-
-// Container(
-//                               margin: const EdgeInsets.only(
-//                                   left: 4, right: 4, top: 2),
-//                               constraints: const BoxConstraints.expand(
-//                                 height: 150,
-//                               ),
-//                               decoration: const BoxDecoration(
-//                                   color: Colors.white,
-//                                   borderRadius:
-//                                       BorderRadius.all(Radius.circular(12))),
-//                               child: Padding(
-//                                 padding: const EdgeInsets.all(4.0),
-//                                 child: Column(
-//                                   children: [
-//                                     Row(
-//                                       children: [
-//                                         favProducts[index].off.toString() == '0'
-//                                             ? Container()
-//                                             : Container(
-//                                                 constraints:
-//                                                     const BoxConstraints.expand(
-//                                                   width: 40,
-//                                                   height: 30,
-//                                                 ),
-//                                                 decoration: const BoxDecoration(
-//                                                     color: Color.fromARGB(
-//                                                         255, 147, 182, 243),
-//                                                     borderRadius:
-//                                                         BorderRadius.all(
-//                                                             Radius.circular(
-//                                                                 10))),
-//                                                 child: Center(
-//                                                     child: Text(
-//                                                   '${favProducts[index].off}%',
-//                                                   style: const TextStyle(
-//                                                       fontSize: 13,
-//                                                       fontWeight:
-//                                                           FontWeight.bold),
-//                                                 )),
-//                                               ),
-//                                         const Spacer(),
-//                                         Consumer<ProductModel>(builder:
-//                                             (context, productModel, child) {
-//                                           return GestureDetector(
-//                                             onTap: () {
-//                                               setState(() {
-//                                                 productModel.toggleFavourite(
-//                                                     favProducts[index].id,
-//                                                     auth.token,
-//                                                     auth.userId);
-//                                               });
-//                                             },
-//                                             child: Padding(
-//                                               padding: const EdgeInsets.only(
-//                                                   right: 8.0),
-//                                               child: favProducts[index]
-//                                                       .isFavourite!
-//                                                   ? const Icon(
-//                                                       Icons.favorite,
-//                                                       color: Colors.red,
-//                                                       // size: 15,
-//                                                     )
-//                                                   : const Icon(
-//                                                       Icons.favorite,
-//                                                       color: Colors.grey,
-//                                                     ),
-//                                             ),
-//                                           );
-//                                         })
-//                                       ],
-//                                     ),
-//                                     Container(
-//                                         // margin: const EdgeInsets.only(top: 25, bottom: 25),
-//                                         padding: const EdgeInsets.all(2.0),
-//                                         child: Stack(
-//                                           children: [
-//                                             Container(
-//                                               padding: const EdgeInsets.all(3),
-//                                               decoration: const BoxDecoration(),
-//                                               width: double.infinity,
-//                                               height: 98,
-//                                               child: Image.network(
-//                                                 favProducts[index].imageUrl![0],
-//                                                 height: 50,
-//                                               ),
-//                                             ),
-//                                           ],
-//                                         )),
-//                                     const SizedBox(
-//                                       height: 10,
-//                                     ),
-//                                     Padding(
-//                                       padding: const EdgeInsets.only(
-//                                           left: 5, right: 5),
-//                                       child: Text(
-//                                         '${favProducts[index].title}',
-//                                         softWrap: false,
-//                                         style: const TextStyle(
-//                                             fontWeight: FontWeight.bold,
-//                                             fontSize: 13),
-//                                       ),
-//                                     ),
-//                                     const SizedBox(
-//                                       height: 10,
-//                                     ),
-//                                     Text(
-//                                       '\$ ${favProducts[index].price}',
-//                                       style: const TextStyle(
-//                                           fontWeight: FontWeight.bold,
-//                                           fontSize: 20,
-//                                           color:
-//                                               Color.fromARGB(255, 3, 67, 121)),
-//                                     ),
-//                                   ],
-//                                 ),
-//                               )),

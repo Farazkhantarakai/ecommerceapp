@@ -62,7 +62,7 @@ class Orders extends ChangeNotifier {
     try {
       final response = await http.get(Uri.parse(url));
       List<OrderItem> loadedProduct = [];
-      final extractedData = jsonDecode(response.body) as Map<String, dynamic>;
+      final extractedData = jsonDecode(response.body);
 
       // ignore: unnecessary_null_comparison
       if (extractedData == null) {
@@ -97,12 +97,16 @@ class Orders extends ChangeNotifier {
   }
 
   deletOrder(String orderId) async {
-    print('item deleted');
+    if (kDebugMode) {
+      print('item deleted');
+    }
     final response = await http.delete(Uri.parse(
         'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/orders/$orderId.json?auth=$tokenId'));
 
+    var result = jsonDecode(response.body);
+
     if (kDebugMode) {
-      print(response.body);
+      print(response);
     }
 
     notifyListeners();

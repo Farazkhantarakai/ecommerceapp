@@ -1,13 +1,12 @@
 import 'package:ecommerce_app/providers/orders.dart';
 import 'package:ecommerce_app/screens/OrderItemScreen.dart';
-import 'package:ecommerce_app/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({super.key});
-
+  static const routName = 'orderscreen';
   @override
   Widget build(BuildContext context) {
     final mdq = MediaQuery.of(context).size;
@@ -37,6 +36,16 @@ class OrderScreen extends StatelessWidget {
                     color: Colors.black,
                   ),
                 );
+                // ignore: unrelated_type_equality_checks
+              } else if (!snapshot.hasData) {
+                return const Center(
+                    child: Text(
+                  'No  Order Added yet',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 19),
+                ));
               } else {
                 if (kDebugMode) {
                   print('${snapshot.error}');

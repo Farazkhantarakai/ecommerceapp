@@ -19,10 +19,13 @@ import 'package:ecommerce_app/screens/profile_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import './screens/check_out_screen.dart';
 
 void main() {
+  Stripe.publishableKey =
+      'pk_test_51N1SG5HWB5SDvH3sT2neTO8ScQ54gBMLqHh2Sb758IWQLhhur4p3ZsKHcZSwzLrObb31iMODH1zRwCCwkTiEXWHq00edQWN4sL';
   runApp(const MyApp());
 }
 
@@ -78,6 +81,7 @@ class _MyAppState extends State<MyApp> {
                     const GetStartedScreen(),
                 DetailScreen.routName: (context) => const DetailScreen(),
                 SignUpScreen.routName: (context) => const SignUpScreen(),
+                OrderScreen.routName: (context) => const OrderScreen(),
                 LogInScreen.routName: (context) => const LogInScreen(),
                 ForgotPassword.routName: (context) => ForgotPassword(),
                 ItemOrderScreen.routName: (context) => const ItemOrderScreen(),
@@ -114,7 +118,7 @@ class _MyHomeAppState extends State<MyHomeApp> {
         actionButton: CurvedActionBar(
             onTab: (value) {
               if (kDebugMode) {
-                print(value);
+                print('next clicked $value');
               }
             },
             activeIcon: Stack(

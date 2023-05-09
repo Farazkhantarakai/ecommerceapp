@@ -74,9 +74,6 @@ class _SingleGridItemState extends State<SingleGridItem> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          // if (kDebugMode) {
-                          //   print(ite.id);
-                          // }
                           ite.toggleFavourite(
                               ite.id, prod.authToken, prod.userId);
                         });
@@ -117,10 +114,10 @@ class _SingleGridItemState extends State<SingleGridItem> {
                           padding: EdgeInsets.all(widget.ctx.maxHeight * 0.03),
                           decoration: const BoxDecoration(),
                           width: double.infinity,
-                          height: widget.ctx.maxHeight * 0.25,
+                          height: widget.ctx.maxHeight * 0.19,
                           child: Image.network(
                             ite.imageUrl![0],
-                            height: 20,
+                            height: 50,
                           ),
                         ),
                       ],

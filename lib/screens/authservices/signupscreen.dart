@@ -1,9 +1,8 @@
 import 'package:ecommerce_app/models/httpexception.dart';
 import 'package:ecommerce_app/providers/auth.dart';
-import 'package:ecommerce_app/screens/authservices/forgot_passwod.dart';
 import 'package:ecommerce_app/screens/authservices/loginscreen.dart';
 import 'package:ecommerce_app/utils/utils.dart';
-
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +21,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
   bool? isloading = false;
+  bool isShow = true;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ? const Center(
                   child: CircularProgressIndicator(
                     color: Colors.white,
-                    // strokeWidth: 30,
                   ),
                 )
               : Column(children: [
@@ -190,9 +188,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     ),
                                     TextFormField(
                                       controller: _passwordController,
-                                      decoration: const InputDecoration(
+                                      obscureText: isShow ? true : false,
+                                      decoration: InputDecoration(
+                                          suffix: RichText(
+                                            text: TextSpan(
+                                                text: isShow ? 'Show' : 'Hide',
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.blue),
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () {
+                                                        setState(() {
+                                                          isShow = !isShow;
+                                                        });
+                                                      }),
+                                          ),
                                           contentPadding:
-                                              EdgeInsets.only(left: 2),
+                                              const EdgeInsets.only(left: 2),
                                           fillColor: Colors.green),
                                       validator: (value) {
                                         if (value!.isEmpty) {
@@ -219,8 +232,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       });
                                       try {
                                         auth
-                                            .signUpUser(_emailController.text,
-                                                _passwordController.text)
+                                            .signUpUser(
+                                                _emailController.text,
+                                                _passwordController.text,
+                                                _nameController.text)
                                             .then((value) {
                                           setState(() {
                                             isloading = false;

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:ecommerce_app/models/CartD.dart';
 import 'package:ecommerce_app/models/cartmodel.dart';
 import 'package:ecommerce_app/utils/utils.dart';
 import 'package:flutter/foundation.dart';
@@ -66,12 +68,37 @@ class CartItem extends ChangeNotifier {
     notifyListeners();
   }
 
+  deleteCartItems(List<Cartd> items) async {
+    debugPrint('items are here');
+    try {
+      items.forEach((element) async {
+        debugPrint(element.id.toString());
+        var response = await http.delete(Uri.parse(
+            'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/cart/${element.id}.json?auth=$token'));
+        debugPrint(response.body.toString());
+        var result = jsonDecode(response.body.toString());
+        if (result == 200) {
+          if (kDebugMode) {
+            print('item deleted succefully ');
+          }
+        }
+
+        // notifyListeners();
+      });
+      notifyListeners();
+    } catch (err) {
+      debugPrint(err.toString());
+    }
+  }
+
   Future<void> doDeleteItems() async {
     deleteCartItem.forEach((element) async {
       String url =
           'https://ecommerceapp-1754f-default-rtdb.firebaseio.com/cart/${element.key}.json?auth=$token';
       var response = await http.delete(Uri.parse(url));
-      // print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       notifyListeners();
       if (response.statusCode == 200) {
         cartItem.remove(element.id);
@@ -83,7 +110,7 @@ class CartItem extends ChangeNotifier {
 
   removeDeletingCartItem(CartModel cm) {
     deleteCartItem.removeWhere((element) => element.id == cm.id);
-    print('deleting item are $deleteCartItem');
+    debugPrint('deleting item are $deleteCartItem');
     notifyListeners();
   }
 

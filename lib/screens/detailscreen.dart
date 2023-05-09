@@ -20,7 +20,7 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     var tData = ModalRoute.of(context)!.settings.arguments as ProductModel;
 
-    var cData = Provider.of<Products>(context, listen: false).getProducts;
+    var cData = Provider.of<Products>(context, listen: true).getProducts;
 
     //singlewhere will give you that single item
     var tak = cData.singleWhere((element) => element.id == tData.id);
@@ -94,6 +94,7 @@ class _DetailScreenState extends State<DetailScreen> {
               builder: (context, data, prod, child) {
             return IconButton(
                 onPressed: () {
+                  debugPrint('i am clicked');
                   setState(() {
                     data.toggleFavourite(tak.id, prod.authToken, prod.userId);
                   });
